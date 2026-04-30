@@ -1,0 +1,11 @@
+{
+  "name": "Нужные слова",
+  "short_name": "Слова",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "description": "Маленький генератор нужных слов",
+  "icons": []
+}
