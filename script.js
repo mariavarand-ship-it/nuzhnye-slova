@@ -26,87 +26,72 @@ const wisdomUsedKey = "generatedWisdomMessages";
 const praiseUsedKey = "generatedPraiseMessages";
 
 const moodObjects = [
-  "внутренний чайник",
-  "маленький шкаф",
-  "сонный самовар",
-  "карман для радости",
-  "невидимый кот",
+  "внутренний огурец",
+  "карманный самовар",
+  "чайник с амбициями",
+  "сонная табуретка",
+  "невидимый пельмень",
   "зонтик для мыслей",
-  "пледовая корона",
-  "лампа с характером",
-  "смешной кабачок",
-  "кнопка хорошего дня",
-  "комната с тайным смехом",
-  "летающая табуретка",
-  "носок-философ",
-  "ложка с важным видом",
-  "облако без паспорта",
-  "чемодан для тревоги",
-  "фонарик внутри",
+  "пугливый банан",
+  "луна в тапках",
   "булочка судьбы",
-  "пирожок спокойствия",
-  "маленькая звезда в тапках",
-  "рассеянный понедельник",
-  "улыбка размером с горошину",
-  "слово «кукуруза»",
+  "серьёзная морковка",
+  "внутренний кабачок",
+  "домашний метеорит",
+  "носок-философ",
+  "комнатный гром",
+  "вежливый карась",
+  "рассеянный вторник",
+  "крошечный дирижабль",
+  "смущённая кастрюля",
   "тихий фейерверк",
-  "домашний гром"
+  "внутренний пингвин"
 ];
 
 const moodActions = [
-  "смотрит на мир с подозрительной нежностью",
-  "надевает смешные носки и перестаёт спорить",
-  "делает маленький поклон дню",
-  "шепчет, что катастрофа немного преувеличивает",
-  "прячет тревогу под подушку",
-  "выходит из-за угла с булочкой",
-  "включает режим тихого чуда",
-  "перестаёт командовать внутренним парадом",
-  "подмигивает из темноты",
-  "перекладывает грусть в другой ящик",
-  "говорит: «ну ладно, жить можно»",
-  "заворачивает день в мягкую бумагу",
-  "садится рядом и не требует отчёта",
-  "делает вид, что всё это репетиция радости",
-  "снимает с утра слишком серьёзную шляпу",
-  "устраивает маленький переворот в пользу тепла",
-  "отдаёт тревоге билет в один конец",
-  "рисует смешной знак на полях дня",
-  "просит не ругать сердце за погоду",
-  "заменяет внутренний скрип на тихий свет",
-  "возвращает воздуху право быть внутри",
-  "выдаёт разрешение на маленькую радость",
-  "становится смешнее ровно настолько, насколько нужно",
-  "делает день менее деревянным",
-  "кладёт в карман немного света"
+  "съел половину тревоги",
+  "объявил день пригодным для жизни",
+  "ушёл в отпуск вместо паники",
+  "попросил не драматизировать",
+  "надел праздничные носки",
+  "снял с мира серьёзное лицо",
+  "принёс одну маленькую радость",
+  "отменил внутреннюю скуку",
+  "подвинул грусть локтем",
+  "включил режим нелепого уюта",
+  "спрятал печаль в комод",
+  "тихо подмигнул",
+  "разрешил тебе не геройствовать",
+  "выдал сердцу плед",
+  "заменил тревогу на булочку",
+  "подписал мирный договор с утром",
+  "добавил в день немного абсурда",
+  "перестал устраивать драму",
+  "нашёл запасной смысл",
+  "поставил хаос в очередь"
 ];
 
-const moodEndings = [
-  "и это уже неплохое начало",
-  "и день становится чуть менее колючим",
-  "и плохое настроение теряет официальный вид",
-  "и мир перестаёт быть строгим начальником",
-  "и внутри появляется место для воздуха",
-  "и тревога не получает главный микрофон",
-  "и хаос выглядит почти декоративно",
-  "и одна маленькая радость уже считается",
-  "и не нужно побеждать дракона прямо сейчас",
-  "и это достойно уважительного кивка от луны",
-  "и всё плохое уменьшается до размера горошины",
-  "и жизнь слегка подмигивает из-за занавески",
-  "и настроение возвращается без лишнего шума",
-  "и можно быть живым существом, а не идеальным механизмом",
-  "и где-то внутри тихо включается свет",
-  "и обычный вечер получает шанс стать уютным",
-  "и сердце перестаёт спорить с погодой",
-  "и день вдруг вспоминает, что можно быть мягче",
-  "и усталость получает законный стул",
-  "и мир становится не прекрасным, но выносимым",
-  "и этого уже достаточно для маленькой победы",
-  "и в голове появляется окно",
-  "и смысл выглядывает из-под стола",
-  "и даже тишина начинает звучать добрее",
-  "и всё ещё можно устроить дружбу с этим днём"
+const moodResults = [
+  "это уже удача",
+  "так что можно жить",
+  "и день стал мягче",
+  "и это хорошая новость",
+  "и мир уже не такой вредный",
+  "так что всё не зря",
+  "и настроение перестало дуться",
+  "и это вполне победа",
+  "так что всё не безнадёжно",
+  "и этого уже достаточно",
+  "и день больше не кусается",
+  "так что сердце может выдохнуть",
+  "и даже понедельник растерялся",
+  "и стало чуть смешнее",
+  "так что мрак немного опозорился",
+  "и теперь всё терпимо",
+  "так что хаос потерял авторитет",
+  "и жизнь уже не такая колючая",
+  "так что можно не паниковать",
+  "и стало на один светлее"
 ];
 
 const wisdomActions = [
@@ -251,10 +236,10 @@ const praiseEndings = [
 
 const nameOpeners = [
   "{name},",
-  "{name}, слушай:",
-  "{name}, вот что важно:",
-  "{name}, маленькое послание:",
-  "{name}, сегодня так:"
+  "{name}, слушай,",
+  "{name},",
+  "{name}, сегодня так,",
+  "{name}, вот что важно,"
 ];
 
 function startApp() {
@@ -364,13 +349,11 @@ function generateUniqueMessage(usedKey, generator) {
 
 function generateMoodMessage() {
   const templates = [
-    () => `${getNameOpener()} ${getRandomItem(moodObjects)} сегодня ${getRandomItem(moodActions)}, ${getRandomItem(moodEndings)}.`,
-    () => `${getNameOpener()} если день ведёт себя странно, пусть ${getRandomItem(moodObjects)} ${getRandomItem(moodActions)}, ${getRandomItem(moodEndings)}.`,
-    () => `${getNameOpener()} сегодня можно не совершать подвиги: пусть ${getRandomItem(moodObjects)} ${getRandomItem(moodActions)}, ${getRandomItem(moodEndings)}.`,
-    () => `${getNameOpener()} даже если настроение спряталось, ${getRandomItem(moodObjects)} ${getRandomItem(moodActions)}, ${getRandomItem(moodEndings)}.`,
-    () => `${getNameOpener()} пусть ${getRandomItem(moodObjects)} ${getRandomItem(moodActions)}, ${getRandomItem(moodEndings)}.`,
-    () => `${getNameOpener()} если внутренний понедельник стучит ложкой по столу, пусть ${getRandomItem(moodObjects)} ${getRandomItem(moodActions)}, ${getRandomItem(moodEndings)}.`,
-    () => `${getNameOpener()} сегодня вселенная выдаёт тебе ${getRandomItem(moodObjects)}, который ${getRandomItem(moodActions)}, ${getRandomItem(moodEndings)}.`
+    () => `${getNameOpener()} твой ${getRandomItem(moodObjects)} ${getRandomItem(moodActions)} — ${getRandomItem(moodResults)}.`,
+    () => `${getNameOpener()} ${getRandomItem(moodObjects)} сегодня ${getRandomItem(moodActions)} — ${getRandomItem(moodResults)}.`,
+    () => `${getNameOpener()} срочная новость: ${getRandomItem(moodObjects)} ${getRandomItem(moodActions)}. ${getRandomItem(moodResults)}.`,
+    () => `${getNameOpener()} если что, ${getRandomItem(moodObjects)} уже ${getRandomItem(moodActions)}. ${getRandomItem(moodResults)}.`,
+    () => `${getNameOpener()} у мира сломалось серьёзное лицо: ${getRandomItem(moodObjects)} ${getRandomItem(moodActions)}.`
   ];
 
   return generateUniqueMessage(moodUsedKey, () => getRandomItem(templates)());
@@ -378,13 +361,13 @@ function generateMoodMessage() {
 
 function generateWisdomMessage() {
   const templates = [
-    () => `${getNameOpener()} иногда важно ${getRandomItem(wisdomActions)}: ${getRandomItem(wisdomResults)}.`,
+    () => `${getNameOpener()} иногда важно ${getRandomItem(wisdomActions)} — ${getRandomItem(wisdomResults)}.`,
     () => `${getNameOpener()} сегодня попробуй ${getRandomItem(wisdomActions)} — так ${getRandomItem(wisdomResults)}.`,
     () => `${getNameOpener()} мудрость начинается там, где получается ${getRandomItem(wisdomActions)}, и тогда ${getRandomItem(wisdomResults)}.`,
     () => `${getNameOpener()} не нужно всё решать сразу: достаточно ${getRandomItem(wisdomActions)}, чтобы ${getRandomItem(wisdomResults)}.`,
-    () => `${getNameOpener()} когда становится трудно, попробуй ${getRandomItem(wisdomActions)}; так ${getRandomItem(wisdomResults)}.`,
+    () => `${getNameOpener()} когда становится трудно, попробуй ${getRandomItem(wisdomActions)} — так ${getRandomItem(wisdomResults)}.`,
     () => `${getNameOpener()} даже если мысль шумит как кастрюля, можно ${getRandomItem(wisdomActions)} — и тогда ${getRandomItem(wisdomResults)}.`,
-    () => `${getNameOpener()} один спокойный жест — ${getRandomItem(wisdomActions)} — иногда делает так, что ${getRandomItem(wisdomResults)}.`
+    () => `${getNameOpener()} один спокойный жест, ${getRandomItem(wisdomActions)}, иногда делает так, что ${getRandomItem(wisdomResults)}.`
   ];
 
   return generateUniqueMessage(wisdomUsedKey, () => getRandomItem(templates)());
@@ -394,10 +377,10 @@ function generatePraiseMessage() {
   const templates = [
     () => `${getNameOpener()} ${getRandomItem(praiseQualities)}, ${getRandomItem(praiseEndings)}.`,
     () => `${getNameOpener()} ${getRandomItem(praiseActions)}, ${getRandomItem(praiseEndings)}.`,
-    () => `${getNameOpener()} редкая способность уже есть: ${getRandomItem(praiseActions)}, ${getRandomItem(praiseEndings)}.`,
+    () => `${getNameOpener()} редкая способность уже есть — ${getRandomItem(praiseActions)}, ${getRandomItem(praiseEndings)}.`,
     () => `${getNameOpener()} хочется напомнить: ${getRandomItem(praiseQualities)}, ${getRandomItem(praiseEndings)}.`,
     () => `${getNameOpener()} даже сегодня, даже не в идеальной форме, ${getRandomItem(praiseQualities)}, ${getRandomItem(praiseEndings)}.`,
-    () => `${getNameOpener()} в этом странном дне есть факт: ${getRandomItem(praiseActions)}, ${getRandomItem(praiseEndings)}.`,
+    () => `${getNameOpener()} в этом странном дне есть факт — ${getRandomItem(praiseActions)}, ${getRandomItem(praiseEndings)}.`,
     () => `${getNameOpener()} внутренний маленький оркестр подтверждает: ${getRandomItem(praiseQualities)}, ${getRandomItem(praiseEndings)}.`
   ];
 
