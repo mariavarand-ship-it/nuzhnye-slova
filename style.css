@@ -222,10 +222,11 @@ input::placeholder {
 }
 
 .footer {
-  position: absolute;
-  bottom: 2px;
+  position: static;
+  margin-top: 18px;
   font-size: 13px;
   color: rgba(255, 255, 255, 0.38);
+  text-align: center;
 }
 
 @keyframes fadeIn {
