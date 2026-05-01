@@ -45,7 +45,12 @@ const moodObjects = [
   "крошечный дирижабль",
   "смущённая кастрюля",
   "тихий фейерверк",
-  "внутренний пингвин"
+  "внутренний пингвин",
+  "ложка с дипломом",
+  "пирожок спокойствия",
+  "сапог-оптимист",
+  "шкаф с секретом",
+  "маленький барабан внутри"
 ];
 
 const moodActions = [
@@ -61,37 +66,47 @@ const moodActions = [
   "включил режим нелепого уюта",
   "спрятал печаль в комод",
   "тихо подмигнул",
-  "разрешил тебе не геройствовать",
+  "разрешил не геройствовать",
   "выдал сердцу плед",
   "заменил тревогу на булочку",
   "подписал мирный договор с утром",
   "добавил в день немного абсурда",
   "перестал устраивать драму",
   "нашёл запасной смысл",
-  "поставил хаос в очередь"
+  "поставил хаос в очередь",
+  "погладил день против шерсти",
+  "позвал радость из-под стола",
+  "перевёл мрак на полставки",
+  "сделал вид, что так и было",
+  "выдал миру справку о несерьёзности"
 ];
 
 const moodResults = [
   "это уже удача",
-  "так что можно жить",
-  "и день стал мягче",
-  "и это хорошая новость",
-  "и мир уже не такой вредный",
-  "так что всё не зря",
-  "и настроение перестало дуться",
-  "и это вполне победа",
-  "так что всё не безнадёжно",
-  "и этого уже достаточно",
-  "и день больше не кусается",
-  "так что сердце может выдохнуть",
-  "и даже понедельник растерялся",
-  "и стало чуть смешнее",
-  "так что мрак немного опозорился",
-  "и теперь всё терпимо",
-  "так что хаос потерял авторитет",
-  "и жизнь уже не такая колючая",
-  "так что можно не паниковать",
-  "и стало на один светлее"
+  "можно жить",
+  "день стал мягче",
+  "это хорошая новость",
+  "мир уже не такой вредный",
+  "всё не зря",
+  "настроение перестало дуться",
+  "это вполне победа",
+  "всё не безнадёжно",
+  "этого уже достаточно",
+  "день больше не кусается",
+  "сердце может выдохнуть",
+  "даже понедельник растерялся",
+  "стало чуть смешнее",
+  "мрак немного опозорился",
+  "теперь всё терпимо",
+  "хаос потерял авторитет",
+  "жизнь уже не такая колючая",
+  "можно не паниковать",
+  "стало на один светлее",
+  "драма сняла шляпу",
+  "внутри появился смешной воздух",
+  "тревога ушла за хлебом",
+  "день получил мягкий угол",
+  "радость показала нос"
 ];
 
 const wisdomActions = [
@@ -349,11 +364,13 @@ function generateUniqueMessage(usedKey, generator) {
 
 function generateMoodMessage() {
   const templates = [
-    () => `${getNameOpener()} твой ${getRandomItem(moodObjects)} ${getRandomItem(moodActions)} — ${getRandomItem(moodResults)}.`,
-    () => `${getNameOpener()} ${getRandomItem(moodObjects)} сегодня ${getRandomItem(moodActions)} — ${getRandomItem(moodResults)}.`,
-    () => `${getNameOpener()} срочная новость: ${getRandomItem(moodObjects)} ${getRandomItem(moodActions)}. ${getRandomItem(moodResults)}.`,
-    () => `${getNameOpener()} если что, ${getRandomItem(moodObjects)} уже ${getRandomItem(moodActions)}. ${getRandomItem(moodResults)}.`,
-    () => `${getNameOpener()} у мира сломалось серьёзное лицо: ${getRandomItem(moodObjects)} ${getRandomItem(moodActions)}.`
+    () => `${getNameOpener()} сегодня в деле ${getRandomItem(moodObjects)}: ${getRandomItem(moodActions)} — ${getRandomItem(moodResults)}.`,
+    () => `${getNameOpener()} срочная новость: ${getRandomItem(moodObjects)} ${getRandomItem(moodActions)} — ${getRandomItem(moodResults)}.`,
+    () => `${getNameOpener()} если что, у нас тут ${getRandomItem(moodObjects)}: ${getRandomItem(moodActions)} — ${getRandomItem(moodResults)}.`,
+    () => `${getNameOpener()} для поднятия духа назначается ${getRandomItem(moodObjects)}: ${getRandomItem(moodActions)} — ${getRandomItem(moodResults)}.`,
+    () => `${getNameOpener()} у мира сломалось серьёзное лицо: ${getRandomItem(moodObjects)} ${getRandomItem(moodActions)}.`,
+    () => `${getNameOpener()} ${getRandomItem(moodObjects)} сообщает: ${getRandomItem(moodResults)}.`,
+    () => `${getNameOpener()} ${getRandomItem(moodObjects)} уже всё понял — ${getRandomItem(moodResults)}.`
   ];
 
   return generateUniqueMessage(moodUsedKey, () => getRandomItem(templates)());
