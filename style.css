@@ -88,7 +88,7 @@ body.bg-moon::before {
   min-height: 100svh;
   display: grid;
   place-items: center;
-  padding: max(24px, env(safe-area-inset-top)) 24px max(24px, env(safe-area-inset-bottom));
+  padding: max(22px, env(safe-area-inset-top)) 22px max(28px, env(safe-area-inset-bottom));
 }
 
 .screen {
@@ -101,13 +101,15 @@ body.bg-moon::before {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 22px;
+  gap: 18px;
   text-align: center;
   animation: fadeIn 380ms ease;
+  padding: 24px 0 36px;
 }
 
-.hidden {
-  display: none;
+.hidden,
+.is-hidden {
+  display: none !important;
 }
 
 .symbol {
@@ -154,11 +156,12 @@ input::placeholder {
 
 .button {
   border: 1px solid rgba(255, 255, 255, 0.72);
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.94);
   color: #000;
-  min-width: 188px;
-  padding: 13px 22px;
-  font-size: 15px;
+  width: min(320px, 100%);
+  min-height: 72px;
+  padding: 16px 24px;
+  font-size: 17px;
   font-weight: 650;
   cursor: pointer;
   border-radius: 999px;
@@ -188,24 +191,66 @@ input::placeholder {
 }
 
 .message {
-  min-height: 230px;
+  min-height: 185px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(24px, 7vw, 34px);
+  font-size: clamp(23px, 6.5vw, 33px);
   line-height: 1.28;
   letter-spacing: -0.025em;
-  padding: 0 8px;
+  padding: 0 10px;
   text-wrap: balance;
   text-shadow: 0 0 22px rgba(255, 255, 255, 0.10);
+}
+
+.phrase-actions {
+  min-height: 44px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: -2px;
+}
+
+.tiny-action-button {
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.88);
+  border-radius: 999px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 14px rgba(255, 255, 255, 0.06);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: transform 120ms ease, opacity 120ms ease, background 120ms ease;
+}
+
+.tiny-action-button:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.tiny-action-button:active {
+  transform: scale(0.97);
+  opacity: 0.82;
+}
+
+.tiny-action-icon {
+  font-size: 15px;
+  line-height: 1;
+  opacity: 0.95;
 }
 
 .buttons {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
   align-items: center;
+  width: 100%;
+  margin-top: 4px;
 }
 
 .change-name {
@@ -227,6 +272,17 @@ input::placeholder {
   font-size: 13px;
   color: rgba(255, 255, 255, 0.38);
   text-align: center;
+  line-height: 1.4;
+  padding-bottom: 8px;
+}
+
+.footer a {
+  color: rgba(255, 255, 255, 0.62);
+  text-decoration: none;
+}
+
+.footer a:active {
+  opacity: 0.7;
 }
 
 @keyframes fadeIn {
@@ -268,37 +324,4 @@ input::placeholder {
     opacity: 1;
     transform: scale(1.035);
   }
-}
-.phrase-actions {
-  margin-top: -6px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.tiny-action-button {
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  background: rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.76);
-  border-radius: 999px;
-  padding: 9px 14px;
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  backdrop-filter: blur(10px);
-  box-shadow: none;
-}
-
-.tiny-action-button:active {
-  transform: scale(0.97);
-  opacity: 0.78;
-}
-
-.footer a {
-  color: rgba(255, 255, 255, 0.58);
-  text-decoration: none;
-}
-
-.footer a:active {
-  opacity: 0.7;
 }
