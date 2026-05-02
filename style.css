@@ -269,3 +269,36 @@ input::placeholder {
     transform: scale(1.035);
   }
 }
+.phrase-actions {
+  margin-top: -6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.tiny-action-button {
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.76);
+  border-radius: 999px;
+  padding: 9px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  box-shadow: none;
+}
+
+.tiny-action-button:active {
+  transform: scale(0.97);
+  opacity: 0.78;
+}
+
+.footer a {
+  color: rgba(255, 255, 255, 0.58);
+  text-decoration: none;
+}
+
+.footer a:active {
+  opacity: 0.7;
+}
