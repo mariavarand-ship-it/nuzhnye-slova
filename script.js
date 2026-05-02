@@ -9,6 +9,8 @@ const mainScreen = document.getElementById("mainScreen");
 const nameInput = document.getElementById("nameInput");
 const messageElement = document.getElementById("message");
 const emojiElement = document.getElementById("emoji");
+const saveImageButton = document.getElementById("saveImageButton");
+const authorLink = document.getElementById("authorLink");
 
 const nameKey = "childhoodName";
 
@@ -422,11 +424,151 @@ function showPraise() {
   messageElement.textContent = generatePraiseMessage();
 }
 
+async function saveCurrentPhraseAsImage() {
+  trackEvent("image_save_clicked");
+
+  const text = messageElement.textContent.trim();
+  const defaultText = "Нажми кнопку — и приложение скажет что-нибудь нужное.";
+
+  if (!text || text === defaultText) {
+    return;
+  }
+
+  const canvas = document.createElement("canvas");
+  const size = 1080;
+  const padding = 96;
+
+  canvas.width = size;
+  canvas.height = size;
+
+  const context = canvas.getContext("2d");
+
+  const gradient = context.createRadialGradient(
+    size * 0.25,
+    size * 0.2,
+    40,
+    size * 0.5,
+    size * 0.5,
+    size
+  );
+
+  gradient.addColorStop(0, "#2a2340");
+  gradient.addColorStop(0.45, "#09090d");
+  gradient.addColorStop(1, "#000000");
+
+  context.fillStyle = gradient;
+  context.fillRect(0, 0, size, size);
+
+  drawSoftGlow(context, 180, 180, 220, "rgba(255, 255, 255, 0.09)");
+  drawSoftGlow(context, 840, 820, 260, "rgba(180, 140, 255, 0.12)");
+  drawSoftGlow(context, 820, 220, 190, "rgba(255, 180, 120, 0.08)");
+
+  context.fillStyle = "rgba(255, 255, 255, 0.9)";
+  context.font = "56px Georgia, serif";
+  context.textAlign = "center";
+  context.textBaseline = "middle";
+  context.fillText("✦", size / 2, 160);
+
+  context.fillStyle = "#f7f2e8";
+  context.font = "54px Georgia, serif";
+
+  const lines = wrapText(context, text, size - padding * 2);
+  const lineHeight = 72;
+  const totalTextHeight = lines.length * lineHeight;
+  let startY = size / 2 - totalTextHeight / 2 + 36;
+
+  lines.forEach((line, index) => {
+    context.fillText(line, size / 2, startY + index * lineHeight);
+  });
+
+  context.fillStyle = "rgba(255, 255, 255, 0.46)";
+  context.font = "30px -apple-system, BlinkMacSystemFont, sans-serif";
+  context.fillText("нужные слова", size / 2, size - 110);
+
+  canvas.toBlob(async blob => {
+    if (!blob) return;
+
+    const file = new File([blob], "nuzhnye-slova.png", {
+      type: "image/png"
+    });
+
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      try {
+        await navigator.share({
+          files: [file],
+          title: "Нужные слова",
+          text: "Сохранила нужные слова"
+        });
+        return;
+      } catch (error) {
+        // Если пользователь закрыл меню «Поделиться», просто скачиваем файл.
+      }
+    }
+
+    const imageUrl = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = imageUrl;
+    link.download = "nuzhnye-slova.png";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    setTimeout(() => {
+      URL.revokeObjectURL(imageUrl);
+    }, 1000);
+  }, "image/png");
+}
+
+function drawSoftGlow(context, x, y, radius, color) {
+  const glow = context.createRadialGradient(x, y, 0, x, y, radius);
+  glow.addColorStop(0, color);
+  glow.addColorStop(1, "rgba(0, 0, 0, 0)");
+
+  context.fillStyle = glow;
+  context.beginPath();
+  context.arc(x, y, radius, 0, Math.PI * 2);
+  context.fill();
+}
+
+function wrapText(context, text, maxWidth) {
+  const words = text.split(" ");
+  const lines = [];
+  let currentLine = "";
+
+  words.forEach(word => {
+    const testLine = currentLine ? `${currentLine} ${word}` : word;
+    const testWidth = context.measureText(testLine).width;
+
+    if (testWidth > maxWidth && currentLine) {
+      lines.push(currentLine);
+      currentLine = word;
+    } else {
+      currentLine = testLine;
+    }
+  });
+
+  if (currentLine) {
+    lines.push(currentLine);
+  }
+
+  return lines;
+}
+
 document.getElementById("saveNameButton").addEventListener("click", saveName);
 document.getElementById("resetNameButton").addEventListener("click", resetName);
 document.getElementById("moodButton").addEventListener("click", showMood);
 document.getElementById("wisdomButton").addEventListener("click", showWisdom);
 document.getElementById("praiseButton").addEventListener("click", showPraise);
+
+if (saveImageButton) {
+  saveImageButton.addEventListener("click", saveCurrentPhraseAsImage);
+}
+
+if (authorLink) {
+  authorLink.addEventListener("click", () => {
+    trackEvent("author_contact_clicked");
+  });
+}
 
 nameInput.addEventListener("keydown", event => {
   if (event.key === "Enter") {
