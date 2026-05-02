@@ -261,6 +261,7 @@ const nameOpeners = [
 
 function startApp() {
   applyRandomBackground();
+  hideSaveButton();
 
   const savedName = localStorage.getItem(nameKey);
 
@@ -297,6 +298,7 @@ function resetName() {
   nameInput.value = "";
   messageElement.textContent = "Нажми кнопку — и приложение скажет что-нибудь нужное.";
   emojiElement.textContent = "✦";
+  hideSaveButton();
   nameScreen.classList.remove("hidden");
   mainScreen.classList.add("hidden");
 
@@ -309,6 +311,19 @@ function showMainScreen(name) {
   nameScreen.classList.add("hidden");
   mainScreen.classList.remove("hidden");
   messageElement.textContent = `${formatName(name)}, нажми кнопку — и приложение скажет что-нибудь нужное.`;
+  hideSaveButton();
+}
+
+function showSaveButton() {
+  if (saveImageButton) {
+    saveImageButton.classList.remove("is-hidden");
+  }
+}
+
+function hideSaveButton() {
+  if (saveImageButton) {
+    saveImageButton.classList.add("is-hidden");
+  }
 }
 
 function getName() {
@@ -410,18 +425,21 @@ function showMood() {
   trackEvent("mood_clicked");
   emojiElement.textContent = getRandomItem(["☀︎", "✦", "☁︎", "♡", "☽", "✶", "✺"]);
   messageElement.textContent = generateMoodMessage();
+  showSaveButton();
 }
 
 function showWisdom() {
   trackEvent("wisdom_clicked");
   emojiElement.textContent = getRandomItem(["☽", "◌", "◇", "✧", "○", "✦"]);
   messageElement.textContent = generateWisdomMessage();
+  showSaveButton();
 }
 
 function showPraise() {
   trackEvent("praise_clicked");
   emojiElement.textContent = getRandomItem(["♡", "✶", "✺", "❋", "✦", "✧"]);
   messageElement.textContent = generatePraiseMessage();
+  showSaveButton();
 }
 
 async function saveCurrentPhraseAsImage() {
