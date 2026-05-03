@@ -40,6 +40,7 @@ body::after {
   pointer-events: none;
 }
 
+/* День 1 — северное сияние */
 body.bg-aurora::before {
   background:
     radial-gradient(circle at 18% 12%, rgba(132, 94, 247, 0.42), transparent 34%),
@@ -48,6 +49,7 @@ body.bg-aurora::before {
     #000;
 }
 
+/* День 2 — сливовый */
 body.bg-plum::before {
   background:
     radial-gradient(circle at 22% 20%, rgba(190, 77, 255, 0.34), transparent 34%),
@@ -55,6 +57,7 @@ body.bg-plum::before {
     #050006;
 }
 
+/* День 3 — синий ночной */
 body.bg-ink::before {
   background:
     radial-gradient(circle at 12% 90%, rgba(255, 255, 255, 0.10), transparent 28%),
@@ -62,6 +65,7 @@ body.bg-ink::before {
     #02030a;
 }
 
+/* День 4 — лесной */
 body.bg-moss::before {
   background:
     radial-gradient(circle at 18% 18%, rgba(120, 255, 196, 0.20), transparent 32%),
@@ -69,6 +73,7 @@ body.bg-moss::before {
     #010604;
 }
 
+/* День 5 — янтарный */
 body.bg-ember::before {
   background:
     radial-gradient(circle at 20% 80%, rgba(255, 112, 67, 0.28), transparent 32%),
@@ -76,11 +81,34 @@ body.bg-ember::before {
     #080201;
 }
 
+/* День 6 — лунный */
 body.bg-moon::before {
   background:
     radial-gradient(circle at 50% 10%, rgba(255, 255, 255, 0.16), transparent 26%),
     radial-gradient(circle at 15% 70%, rgba(144, 180, 255, 0.16), transparent 31%),
     #010101;
+}
+
+/* День 7 — яркий паттерн */
+body.bg-candy::before {
+  background:
+    radial-gradient(circle at 14% 16%, rgba(255, 0, 122, 0.56), transparent 22%),
+    radial-gradient(circle at 86% 18%, rgba(0, 255, 214, 0.38), transparent 24%),
+    radial-gradient(circle at 20% 82%, rgba(255, 222, 89, 0.34), transparent 24%),
+    radial-gradient(circle at 78% 78%, rgba(128, 68, 255, 0.52), transparent 26%),
+    linear-gradient(135deg, #090014 0%, #000000 42%, #120018 100%);
+}
+
+body.bg-candy::after {
+  background:
+    radial-gradient(circle, rgba(255, 255, 255, 0.20) 1.5px, transparent 2px),
+    linear-gradient(45deg, rgba(255, 255, 255, 0.06) 25%, transparent 25%),
+    linear-gradient(-45deg, rgba(255, 255, 255, 0.045) 25%, transparent 25%),
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.06), transparent 44%);
+  background-size: 34px 34px, 56px 56px, 56px 56px, 100% 100%;
+  filter: blur(0px);
+  opacity: 0.82;
+  animation: patternFloat 14s ease-in-out infinite alternate;
 }
 
 .app {
@@ -101,7 +129,7 @@ body.bg-moon::before {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 18px;
+  gap: 16px;
   text-align: center;
   animation: fadeIn 380ms ease;
   padding: 24px 0 36px;
@@ -113,11 +141,19 @@ body.bg-moon::before {
 }
 
 .symbol {
-  font-size: 46px;
+  font-size: 44px;
   line-height: 1;
   opacity: 0.92;
   filter: drop-shadow(0 0 18px rgba(255, 255, 255, 0.18));
   animation: softPulse 4.8s ease-in-out infinite;
+}
+
+.today-date {
+  margin-top: -6px;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
+  color: rgba(255, 255, 255, 0.42);
 }
 
 h1 {
@@ -159,8 +195,8 @@ input::placeholder {
   background: rgba(255, 255, 255, 0.94);
   color: #000;
   width: min(320px, 100%);
-  min-height: 72px;
-  padding: 16px 24px;
+  min-height: 70px;
+  padding: 15px 24px;
   font-size: 17px;
   font-weight: 650;
   cursor: pointer;
@@ -191,7 +227,7 @@ input::placeholder {
 }
 
 .message {
-  min-height: 185px;
+  min-height: 178px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -205,49 +241,68 @@ input::placeholder {
 }
 
 .phrase-actions {
-  min-height: 44px;
+  min-height: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: -2px;
+  margin-top: -4px;
 }
 
-.tiny-action-button {
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  background: rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.88);
+.save-card-button {
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.07));
+  color: rgba(255, 255, 255, 0.90);
   border-radius: 999px;
-  padding: 10px 16px;
+  padding: 9px 15px 10px;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 0 14px rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(14px);
+  box-shadow:
+    0 0 18px rgba(255, 255, 255, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  transition: transform 120ms ease, opacity 120ms ease, background 120ms ease;
+  transition: transform 120ms ease, opacity 120ms ease, background 120ms ease, box-shadow 120ms ease;
 }
 
-.tiny-action-button:hover {
-  background: rgba(255, 255, 255, 0.12);
+.save-card-button:hover {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.21), rgba(255, 255, 255, 0.10));
+  box-shadow:
+    0 0 22px rgba(255, 255, 255, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
 }
 
-.tiny-action-button:active {
+.save-card-button:active {
   transform: scale(0.97);
   opacity: 0.82;
 }
 
-.tiny-action-icon {
+.save-card-heart {
+  width: 23px;
+  height: 23px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.92);
+  color: #000;
   font-size: 15px;
   line-height: 1;
-  opacity: 0.95;
+  box-shadow: 0 0 14px rgba(255, 255, 255, 0.16);
+}
+
+.tiny-action-button,
+.tiny-action-icon {
+  display: none;
 }
 
 .buttons {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 15px;
   align-items: center;
   width: 100%;
   margin-top: 4px;
@@ -270,14 +325,20 @@ input::placeholder {
   position: static;
   margin-top: 18px;
   font-size: 13px;
-  color: rgba(255, 255, 255, 0.38);
+  color: rgba(255, 255, 255, 0.40);
   text-align: center;
-  line-height: 1.4;
+  line-height: 1.45;
   padding-bottom: 8px;
+  max-width: 340px;
+}
+
+.footer-dot {
+  opacity: 0.54;
+  margin: 0 4px;
 }
 
 .footer a {
-  color: rgba(255, 255, 255, 0.62);
+  color: rgba(255, 255, 255, 0.64);
   text-decoration: none;
 }
 
@@ -311,6 +372,18 @@ input::placeholder {
   100% {
     transform: translate3d(1%, -2%, 0) scale(1.02);
     opacity: 0.72;
+  }
+}
+
+@keyframes patternFloat {
+  0% {
+    transform: translate3d(-1%, -1%, 0) scale(1);
+    opacity: 0.74;
+  }
+
+  100% {
+    transform: translate3d(1%, 1%, 0) scale(1.04);
+    opacity: 0.94;
   }
 }
 
