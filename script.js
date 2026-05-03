@@ -11,6 +11,9 @@ const messageElement = document.getElementById("message");
 const emojiElement = document.getElementById("emoji");
 const saveImageButton = document.getElementById("saveImageButton");
 const authorLink = document.getElementById("authorLink");
+const todayDateElement = document.getElementById("todayDate");
+const footerPhraseElement = document.getElementById("footerPhrase");
+const welcomeFooterPhraseElement = document.getElementById("welcomeFooterPhrase");
 
 const nameKey = "childhoodName";
 
@@ -20,7 +23,26 @@ const backgroundClasses = [
   "bg-ink",
   "bg-moss",
   "bg-ember",
-  "bg-moon"
+  "bg-moon",
+  "bg-candy"
+];
+
+const footerPhrases = [
+  "заходи, когда захочешь",
+  "я здесь, если понадобится слово",
+  "приходи, когда будет нужно",
+  "можно вернуться в любой момент",
+  "если что — здесь есть ещё немного слов",
+  "заглядывай, когда захочется",
+  "тут можно взять ещё одно слово",
+  "возвращайся, если откликнется",
+  "если станет шумно — заходи",
+  "приходи за словами, когда захочешь",
+  "можно заглянуть просто так",
+  "здесь всегда есть место для ещё одной фразы",
+  "если понадобится мягкий знак — заходи",
+  "дверь приоткрыта, когда захочешь",
+  "тут тихо, можно возвращаться"
 ];
 
 const moodUsedKey = "generatedMoodMessages";
@@ -260,7 +282,9 @@ const nameOpeners = [
 ];
 
 function startApp() {
-  applyRandomBackground();
+  applyDailyBackground();
+  updateTodayDate();
+  updateDailyFooterPhrase();
   hideSaveButton();
 
   const savedName = localStorage.getItem(nameKey);
@@ -273,9 +297,46 @@ function startApp() {
   }
 }
 
-function applyRandomBackground() {
-  const background = getRandomItem(backgroundClasses);
+function getDayNumber() {
+  const startDate = new Date("2026-05-01T00:00:00");
+  const today = new Date();
+  const dayInMilliseconds = 1000 * 60 * 60 * 24;
+
+  return Math.floor((today - startDate) / dayInMilliseconds);
+}
+
+function applyDailyBackground() {
+  const dayNumber = getDayNumber();
+  const background = backgroundClasses[Math.abs(dayNumber) % backgroundClasses.length];
+
+  document.body.classList.remove(...backgroundClasses);
   document.body.classList.add(background);
+}
+
+function updateTodayDate() {
+  if (!todayDateElement) return;
+
+  const today = new Date();
+
+  const formattedDate = today.toLocaleDateString("ru-RU", {
+    day: "numeric",
+    month: "long"
+  });
+
+  todayDateElement.textContent = `сегодня · ${formattedDate}`;
+}
+
+function updateDailyFooterPhrase() {
+  const dayNumber = getDayNumber();
+  const phrase = footerPhrases[Math.abs(dayNumber) % footerPhrases.length];
+
+  if (footerPhraseElement) {
+    footerPhraseElement.textContent = phrase;
+  }
+
+  if (welcomeFooterPhraseElement) {
+    welcomeFooterPhraseElement.textContent = phrase;
+  }
 }
 
 function saveName() {
