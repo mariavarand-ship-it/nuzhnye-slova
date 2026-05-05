@@ -49,6 +49,98 @@ const moodUsedKey = "generatedMoodMessages";
 const wisdomUsedKey = "generatedWisdomMessages";
 const praiseUsedKey = "generatedPraiseMessages";
 
+const moodLastObjectKey = "moodLastObject";
+const moodLastTemplateKey = "moodLastTemplate";
+const wisdomLastTemplateKey = "wisdomLastTemplate";
+const praiseLastTemplateKey = "praiseLastTemplate";
+
+const timeContexts = {
+  morning: {
+    moodLabel: "утренний",
+    moodIntro: [
+      "утро слегка шуршит",
+      "день только открыл один глаз",
+      "утренний свет ещё сонный",
+      "мир пока не до конца проснулся"
+    ],
+    wisdomIntro: [
+      "утром не нужно сразу становиться подвигом",
+      "утро лучше начинать без внутренней сирены",
+      "первый шаг дня может быть маленьким",
+      "утренний ум часто шумит раньше сердца"
+    ],
+    praiseIntro: [
+      "даже в начале дня",
+      "пока день только собирается",
+      "уже с утра",
+      "в этом новом дне"
+    ]
+  },
+  day: {
+    moodLabel: "дневной",
+    moodIntro: [
+      "день делает серьёзное лицо",
+      "середина дня просит чаю",
+      "мир бегает с папкой",
+      "дневной хаос пытается командовать"
+    ],
+    wisdomIntro: [
+      "среди дневного шума важно не потерять себя",
+      "днём особенно полезно не спешить внутри",
+      "даже в движении можно выбрать мягкость",
+      "в середине дня достаточно одного ясного жеста"
+    ],
+    praiseIntro: [
+      "среди дневного шума",
+      "даже если день требует слишком много",
+      "прямо посреди дел",
+      "в самой середине этого дня"
+    ]
+  },
+  evening: {
+    moodLabel: "вечерний",
+    moodIntro: [
+      "вечер снимает ботинки",
+      "день устал быть начальником",
+      "вечерний воздух достаёт плед",
+      "сумерки тихо поправляют лампу"
+    ],
+    wisdomIntro: [
+      "вечером можно вернуть себе себя",
+      "вечер не требует идеального отчёта",
+      "к концу дня важно не судить себя слишком строго",
+      "вечером особенно хорошо отпускать лишнее"
+    ],
+    praiseIntro: [
+      "к вечеру особенно видно",
+      "после всего сегодняшнего",
+      "даже если день выдался неровным",
+      "в этом вечернем свете"
+    ]
+  },
+  night: {
+    moodLabel: "ночной",
+    moodIntro: [
+      "ночь говорит тише",
+      "лунный воздух гладит углы",
+      "ночной мир ходит на цыпочках",
+      "темнота принесла маленький фонарик"
+    ],
+    wisdomIntro: [
+      "ночью не нужно решать всю жизнь",
+      "ночь лучше слушать тихо",
+      "перед сном можно отпустить хотя бы один камень",
+      "ночной ум иногда преувеличивает тени"
+    ],
+    praiseIntro: [
+      "даже в ночной тишине",
+      "если день был длинным",
+      "пока мир говорит шёпотом",
+      "в этой тихой темноте"
+    ]
+  }
+};
+
 const moodObjects = [
   "внутренний огурец",
   "карманный самовар",
@@ -74,7 +166,12 @@ const moodObjects = [
   "пирожок спокойствия",
   "сапог-оптимист",
   "шкаф с секретом",
-  "маленький барабан внутри"
+  "маленький барабан внутри",
+  "ежедневный таракан дипломатии",
+  "облако без прописки",
+  "маленький шкаф радости",
+  "сонный барабанщик смысла",
+  "коробка с запасным светом"
 ];
 
 const moodActions = [
@@ -102,7 +199,12 @@ const moodActions = [
   "позвал радость из-под стола",
   "перевёл мрак на полставки",
   "сделал вид, что так и было",
-  "выдал миру справку о несерьёзности"
+  "выдал миру справку о несерьёзности",
+  "сложил тревогу в маленький конверт",
+  "поставил грусть на паузу",
+  "обнял хаос официально",
+  "назначил радость временным директором",
+  "запретил панике ходить без шапки"
 ];
 
 const moodResults = [
@@ -130,7 +232,12 @@ const moodResults = [
   "внутри появился смешной воздух",
   "тревога ушла за хлебом",
   "день получил мягкий угол",
-  "радость показала нос"
+  "радость показала нос",
+  "внутренний шум стал тише",
+  "день перестал изображать начальство",
+  "сердце получило маленькую табуретку",
+  "мир стал чуть менее деревянным",
+  "можно продолжать без фанфар"
 ];
 
 const wisdomActions = [
@@ -158,7 +265,12 @@ const wisdomActions = [
   "видеть страх как погоду, а не как истину",
   "останавливать внутреннюю спешку у двери",
   "помнить, что мягкость тоже бывает силой",
-  "не превращать чужую бурю в свой климат"
+  "не превращать чужую бурю в свой климат",
+  "разрешать себе не понимать всё сразу",
+  "оставлять прошлому его комнату",
+  "не кормить тревогу лишними доказательствами",
+  "делать шаг, а не строить сразу весь мост",
+  "выбирать бережность вместо самодопроса"
 ];
 
 const wisdomResults = [
@@ -186,7 +298,12 @@ const wisdomResults = [
   "хаос становится меньше",
   "пауза оказывается не пустотой, а мостом",
   "внутри появляется больше воздуха",
-  "мир перестаёт требовать мгновенного ответа"
+  "мир перестаёт требовать мгновенного ответа",
+  "можно перестать быть своим прокурором",
+  "мысль теряет право командовать всем днём",
+  "мягкость становится практикой",
+  "внутренний дом снова получает ключи",
+  "сегодня становится не приговором, а дорогой"
 ];
 
 const praiseQualities = [
@@ -214,7 +331,12 @@ const praiseQualities = [
   "в тебе есть редкая способность не становиться жёсткостью",
   "в тебе есть место, где живёт хорошее слово",
   "в тебе много воздуха для нового",
-  "в тебе есть свет, который не требует сцены"
+  "в тебе есть свет, который не требует сцены",
+  "в тебе есть редкое умение оставаться живым человеком",
+  "в тебе много тихой храбрости",
+  "в тебе есть внутренняя комната, где не гаснет лампа",
+  "в тебе достаточно света даже без доказательств",
+  "в тебе есть нежность, которая умеет держаться"
 ];
 
 const praiseActions = [
@@ -242,7 +364,12 @@ const praiseActions = [
   "ты замечаешь тонкое и не обесцениваешь его",
   "ты несёшь себя через день как важную вещь",
   "ты выбираешь жизнь даже в маленьких движениях",
-  "ты строишь внутренний дом по одному кирпичику"
+  "ты строишь внутренний дом по одному кирпичику",
+  "ты умеешь быть рядом с собой",
+  "ты находишь маленький свет там, где другие проходят мимо",
+  "ты выдерживаешь больше, чем обязана выдерживать душа",
+  "ты возвращаешься к себе даже после шума",
+  "ты не становишься камнем, хотя мир иногда старается"
 ];
 
 const praiseEndings = [
@@ -270,7 +397,12 @@ const praiseEndings = [
   "и это уже достаточно важно",
   "и это стоит беречь",
   "и это делает день человечнее",
-  "и это не маленькая вещь"
+  "и это не маленькая вещь",
+  "и это можно не прятать",
+  "и это остаётся с тобой даже в сложные дни",
+  "и это достойно тихой гордости",
+  "и это не случайность",
+  "и это уже свет"
 ];
 
 const nameOpeners = [
@@ -303,6 +435,24 @@ function getDayNumber() {
   const dayInMilliseconds = 1000 * 60 * 60 * 24;
 
   return Math.floor((today - startDate) / dayInMilliseconds);
+}
+
+function getTimeContext() {
+  const hour = new Date().getHours();
+
+  if (hour >= 5 && hour < 12) {
+    return timeContexts.morning;
+  }
+
+  if (hour >= 12 && hour < 18) {
+    return timeContexts.day;
+  }
+
+  if (hour >= 18 && hour < 23) {
+    return timeContexts.evening;
+  }
+
+  return timeContexts.night;
 }
 
 function applyDailyBackground() {
@@ -401,6 +551,27 @@ function getRandomItem(items) {
   return items[Math.floor(Math.random() * items.length)];
 }
 
+function getDifferentRandomItem(items, storageKey) {
+  const lastItem = localStorage.getItem(storageKey);
+  const availableItems = items.filter(item => item !== lastItem);
+  const chosenItem = getRandomItem(availableItems.length ? availableItems : items);
+
+  localStorage.setItem(storageKey, chosenItem);
+
+  return chosenItem;
+}
+
+function getDifferentTemplateIndex(templates, storageKey) {
+  const lastIndex = Number(localStorage.getItem(storageKey));
+  const indexes = templates.map((_, index) => index);
+  const availableIndexes = indexes.filter(index => index !== lastIndex);
+  const chosenIndex = getRandomItem(availableIndexes.length ? availableIndexes : indexes);
+
+  localStorage.setItem(storageKey, String(chosenIndex));
+
+  return chosenIndex;
+}
+
 function getNameOpener() {
   const opener = getRandomItem(nameOpeners);
   return opener.replace("{name}", getName());
@@ -413,8 +584,8 @@ function saveUniqueMessage(usedKey, message) {
     usedMessages.push(message);
   }
 
-  if (usedMessages.length > 900) {
-    usedMessages = usedMessages.slice(-900);
+  if (usedMessages.length > 1200) {
+    usedMessages = usedMessages.slice(-1200);
   }
 
   localStorage.setItem(usedKey, JSON.stringify(usedMessages));
@@ -422,7 +593,7 @@ function saveUniqueMessage(usedKey, message) {
 
 function generateUniqueMessage(usedKey, generator) {
   let usedMessages = JSON.parse(localStorage.getItem(usedKey) || "[]");
-  const maxAttempts = 200;
+  const maxAttempts = 280;
 
   for (let attempt = 0; attempt < maxAttempts; attempt++) {
     const message = generator();
@@ -441,45 +612,92 @@ function generateUniqueMessage(usedKey, generator) {
 }
 
 function generateMoodMessage() {
+  const context = getTimeContext();
+
   const templates = [
-    () => `${getNameOpener()} сегодня в деле ${getRandomItem(moodObjects)}: ${getRandomItem(moodActions)} — ${getRandomItem(moodResults)}.`,
-    () => `${getNameOpener()} срочная новость: ${getRandomItem(moodObjects)} ${getRandomItem(moodActions)} — ${getRandomItem(moodResults)}.`,
-    () => `${getNameOpener()} если что, у нас тут ${getRandomItem(moodObjects)}: ${getRandomItem(moodActions)} — ${getRandomItem(moodResults)}.`,
-    () => `${getNameOpener()} для поднятия духа назначается ${getRandomItem(moodObjects)}: ${getRandomItem(moodActions)} — ${getRandomItem(moodResults)}.`,
-    () => `${getNameOpener()} у мира сломалось серьёзное лицо: ${getRandomItem(moodObjects)} ${getRandomItem(moodActions)}.`,
-    () => `${getNameOpener()} ${getRandomItem(moodObjects)} сообщает: ${getRandomItem(moodResults)}.`,
-    () => `${getNameOpener()} ${getRandomItem(moodObjects)} уже всё понял — ${getRandomItem(moodResults)}.`
+    () => {
+      const object = getDifferentRandomItem(moodObjects, moodLastObjectKey);
+      return `${getNameOpener()} ${getRandomItem(context.moodIntro)}: ${object} ${getRandomItem(moodActions)} — ${getRandomItem(moodResults)}.`;
+    },
+    () => {
+      const object = getDifferentRandomItem(moodObjects, moodLastObjectKey);
+      return `${getNameOpener()} срочная ${context.moodLabel} новость: ${object} ${getRandomItem(moodActions)} — ${getRandomItem(moodResults)}.`;
+    },
+    () => {
+      const object = getDifferentRandomItem(moodObjects, moodLastObjectKey);
+      return `${getNameOpener()} если что, у нас тут ${context.moodLabel} ${object}: ${getRandomItem(moodActions)} — ${getRandomItem(moodResults)}.`;
+    },
+    () => {
+      const object = getDifferentRandomItem(moodObjects, moodLastObjectKey);
+      return `${getNameOpener()} для поднятия духа назначается ${context.moodLabel} ${object}: ${getRandomItem(moodActions)} — ${getRandomItem(moodResults)}.`;
+    },
+    () => {
+      const object = getDifferentRandomItem(moodObjects, moodLastObjectKey);
+      return `${getNameOpener()} ${object} сообщает из отдела абсурда: ${getRandomItem(moodResults)}.`;
+    },
+    () => {
+      const object = getDifferentRandomItem(moodObjects, moodLastObjectKey);
+      return `${getNameOpener()} ${object} уже всё понял — ${getRandomItem(moodResults)}.`;
+    },
+    () => {
+      const object = getDifferentRandomItem(moodObjects, moodLastObjectKey);
+      return `${getNameOpener()} ${context.moodLabel} ${object} ${getRandomItem(moodActions)}. ${capitalizeFirstLetter(getRandomItem(moodResults))}.`;
+    },
+    () => {
+      const object = getDifferentRandomItem(moodObjects, moodLastObjectKey);
+      return `${getNameOpener()} протокол радости подписан: ${object} ${getRandomItem(moodActions)} — ${getRandomItem(moodResults)}.`;
+    }
   ];
 
-  return generateUniqueMessage(moodUsedKey, () => getRandomItem(templates)());
+  return generateUniqueMessage(moodUsedKey, () => {
+    const templateIndex = getDifferentTemplateIndex(templates, moodLastTemplateKey);
+    return templates[templateIndex]();
+  });
 }
 
 function generateWisdomMessage() {
+  const context = getTimeContext();
+
   const templates = [
-    () => `${getNameOpener()} иногда важно ${getRandomItem(wisdomActions)} — ${getRandomItem(wisdomResults)}.`,
+    () => `${getNameOpener()} ${getRandomItem(context.wisdomIntro)}: важно ${getRandomItem(wisdomActions)} — ${getRandomItem(wisdomResults)}.`,
     () => `${getNameOpener()} сегодня попробуй ${getRandomItem(wisdomActions)} — так ${getRandomItem(wisdomResults)}.`,
     () => `${getNameOpener()} мудрость начинается там, где получается ${getRandomItem(wisdomActions)}, и тогда ${getRandomItem(wisdomResults)}.`,
     () => `${getNameOpener()} не нужно всё решать сразу: достаточно ${getRandomItem(wisdomActions)}, чтобы ${getRandomItem(wisdomResults)}.`,
     () => `${getNameOpener()} когда становится трудно, попробуй ${getRandomItem(wisdomActions)} — так ${getRandomItem(wisdomResults)}.`,
     () => `${getNameOpener()} даже если мысль шумит как кастрюля, можно ${getRandomItem(wisdomActions)} — и тогда ${getRandomItem(wisdomResults)}.`,
-    () => `${getNameOpener()} один спокойный жест, ${getRandomItem(wisdomActions)}, иногда делает так, что ${getRandomItem(wisdomResults)}.`
+    () => `${getNameOpener()} один спокойный жест, ${getRandomItem(wisdomActions)}, иногда делает так, что ${getRandomItem(wisdomResults)}.`,
+    () => `${getNameOpener()} ${capitalizeFirstLetter(getRandomItem(context.wisdomIntro))}. А дальше достаточно ${getRandomItem(wisdomActions)} — ${getRandomItem(wisdomResults)}.`
   ];
 
-  return generateUniqueMessage(wisdomUsedKey, () => getRandomItem(templates)());
+  return generateUniqueMessage(wisdomUsedKey, () => {
+    const templateIndex = getDifferentTemplateIndex(templates, wisdomLastTemplateKey);
+    return templates[templateIndex]();
+  });
 }
 
 function generatePraiseMessage() {
+  const context = getTimeContext();
+
   const templates = [
-    () => `${getNameOpener()} ${getRandomItem(praiseQualities)}, ${getRandomItem(praiseEndings)}.`,
-    () => `${getNameOpener()} ${getRandomItem(praiseActions)}, ${getRandomItem(praiseEndings)}.`,
+    () => `${getNameOpener()} ${getRandomItem(context.praiseIntro)} ${getRandomItem(praiseQualities)}, ${getRandomItem(praiseEndings)}.`,
+    () => `${getNameOpener()} ${getRandomItem(context.praiseIntro)} ${getRandomItem(praiseActions)}, ${getRandomItem(praiseEndings)}.`,
     () => `${getNameOpener()} редкая способность уже есть — ${getRandomItem(praiseActions)}, ${getRandomItem(praiseEndings)}.`,
     () => `${getNameOpener()} хочется напомнить: ${getRandomItem(praiseQualities)}, ${getRandomItem(praiseEndings)}.`,
     () => `${getNameOpener()} даже сегодня, даже не в идеальной форме, ${getRandomItem(praiseQualities)}, ${getRandomItem(praiseEndings)}.`,
     () => `${getNameOpener()} в этом странном дне есть факт — ${getRandomItem(praiseActions)}, ${getRandomItem(praiseEndings)}.`,
-    () => `${getNameOpener()} внутренний маленький оркестр подтверждает: ${getRandomItem(praiseQualities)}, ${getRandomItem(praiseEndings)}.`
+    () => `${getNameOpener()} внутренний маленький оркестр подтверждает: ${getRandomItem(praiseQualities)}, ${getRandomItem(praiseEndings)}.`,
+    () => `${getNameOpener()} если коротко и честно: ${getRandomItem(praiseQualities)}, ${getRandomItem(praiseEndings)}.`
   ];
 
-  return generateUniqueMessage(praiseUsedKey, () => getRandomItem(templates)());
+  return generateUniqueMessage(praiseUsedKey, () => {
+    const templateIndex = getDifferentTemplateIndex(templates, praiseLastTemplateKey);
+    return templates[templateIndex]();
+  });
+}
+
+function capitalizeFirstLetter(text) {
+  if (!text) return text;
+  return text.charAt(0).toLocaleUpperCase("ru-RU") + text.slice(1);
 }
 
 function showMood() {
