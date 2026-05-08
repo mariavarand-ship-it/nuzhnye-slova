@@ -27,6 +27,72 @@ const backgroundClasses = [
   "bg-candy"
 ];
 
+const dailyBackgrounds = [
+  {
+    className: "bg-aurora",
+    canvas: ["#2a2340", "#09090d", "#000000"],
+    glows: [
+      [180, 180, 220, "rgba(255, 255, 255, 0.09)"],
+      [840, 820, 260, "rgba(180, 140, 255, 0.12)"],
+      [820, 220, 190, "rgba(255, 180, 120, 0.08)"]
+    ]
+  },
+  {
+    className: "bg-plum",
+    canvas: ["#3a1f3d", "#170b22", "#050407"],
+    glows: [
+      [190, 160, 230, "rgba(255, 180, 230, 0.12)"],
+      [820, 780, 280, "rgba(160, 120, 255, 0.14)"],
+      [820, 240, 200, "rgba(255, 210, 160, 0.08)"]
+    ]
+  },
+  {
+    className: "bg-ink",
+    canvas: ["#18243a", "#070b14", "#000000"],
+    glows: [
+      [180, 200, 240, "rgba(160, 210, 255, 0.12)"],
+      [820, 820, 280, "rgba(120, 120, 255, 0.11)"],
+      [780, 220, 190, "rgba(255, 255, 255, 0.07)"]
+    ]
+  },
+  {
+    className: "bg-moss",
+    canvas: ["#223b2a", "#09140d", "#020403"],
+    glows: [
+      [180, 180, 230, "rgba(210, 255, 190, 0.12)"],
+      [840, 800, 270, "rgba(120, 220, 170, 0.11)"],
+      [800, 230, 190, "rgba(255, 230, 170, 0.08)"]
+    ]
+  },
+  {
+    className: "bg-ember",
+    canvas: ["#472419", "#150805", "#030101"],
+    glows: [
+      [180, 170, 230, "rgba(255, 190, 120, 0.13)"],
+      [840, 820, 280, "rgba(255, 120, 90, 0.11)"],
+      [800, 240, 190, "rgba(255, 240, 190, 0.08)"]
+    ]
+  },
+  {
+    className: "bg-moon",
+    canvas: ["#243043", "#0b111c", "#030407"],
+    glows: [
+      [180, 180, 230, "rgba(220, 235, 255, 0.12)"],
+      [840, 800, 280, "rgba(170, 190, 255, 0.12)"],
+      [800, 230, 190, "rgba(255, 255, 255, 0.07)"]
+    ]
+  },
+  {
+    className: "bg-candy",
+    canvas: ["#493050", "#170b20", "#050204"],
+    glows: [
+      [180, 170, 230, "rgba(255, 190, 230, 0.13)"],
+      [840, 800, 270, "rgba(190, 150, 255, 0.13)"],
+      [800, 230, 190, "rgba(255, 220, 170, 0.08)"]
+    ]
+  }
+];
+
 const footerPhrases = [
   "заходи, когда захочешь",
   "я здесь, если понадобится слово",
@@ -53,6 +119,11 @@ const moodLastObjectKey = "moodLastObject";
 const moodLastTemplateKey = "moodLastTemplate";
 const wisdomLastTemplateKey = "wisdomLastTemplate";
 const praiseLastTemplateKey = "praiseLastTemplate";
+
+const nameLastOpenerKey = "nameLastOpener";
+const moodLastIntroKey = "moodLastIntro";
+const wisdomLastIntroKey = "wisdomLastIntro";
+const praiseLastIntroKey = "praiseLastIntro";
 
 const timeContexts = {
   morning: {
@@ -455,12 +526,16 @@ function getTimeContext() {
   return timeContexts.night;
 }
 
-function applyDailyBackground() {
+function getDailyBackground() {
   const dayNumber = getDayNumber();
-  const background = backgroundClasses[Math.abs(dayNumber) % backgroundClasses.length];
+  return dailyBackgrounds[Math.abs(dayNumber) % dailyBackgrounds.length];
+}
+
+function applyDailyBackground() {
+  const background = getDailyBackground();
 
   document.body.classList.remove(...backgroundClasses);
-  document.body.classList.add(background);
+  document.body.classList.add(background.className);
 }
 
 function updateTodayDate() {
@@ -474,6 +549,16 @@ function updateTodayDate() {
   });
 
   todayDateElement.textContent = `сегодня · ${formattedDate}`;
+}
+
+function getFormattedSaveDate() {
+  const today = new Date();
+
+  return today.toLocaleDateString("ru-RU", {
+    day: "numeric",
+    month: "long",
+    year: "numeric"
+  });
 }
 
 function updateDailyFooterPhrase() {
@@ -573,7 +658,7 @@ function getDifferentTemplateIndex(templates, storageKey) {
 }
 
 function getNameOpener() {
-  const opener = getRandomItem(nameOpeners);
+  const opener = getDifferentRandomItem(nameOpeners, nameLastOpenerKey);
   return opener.replace("{name}", getName());
 }
 
@@ -617,7 +702,7 @@ function generateMoodMessage() {
   const templates = [
     () => {
       const object = getDifferentRandomItem(moodObjects, moodLastObjectKey);
-      return `${getNameOpener()} ${getRandomItem(context.moodIntro)}: ${object} ${getRandomItem(moodActions)} — ${getRandomItem(moodResults)}.`;
+      return `${getNameOpener()} ${getDifferentRandomItem(context.moodIntro, moodLastIntroKey)}: ${object} ${getRandomItem(moodActions)} — ${getRandomItem(moodResults)}.`;
     },
     () => {
       const object = getDifferentRandomItem(moodObjects, moodLastObjectKey);
@@ -659,14 +744,14 @@ function generateWisdomMessage() {
   const context = getTimeContext();
 
   const templates = [
-    () => `${getNameOpener()} ${getRandomItem(context.wisdomIntro)}: важно ${getRandomItem(wisdomActions)} — ${getRandomItem(wisdomResults)}.`,
+    () => `${getNameOpener()} ${getDifferentRandomItem(context.wisdomIntro, wisdomLastIntroKey)}: важно ${getRandomItem(wisdomActions)} — ${getRandomItem(wisdomResults)}.`,
     () => `${getNameOpener()} сегодня попробуй ${getRandomItem(wisdomActions)} — так ${getRandomItem(wisdomResults)}.`,
     () => `${getNameOpener()} мудрость начинается там, где получается ${getRandomItem(wisdomActions)}, и тогда ${getRandomItem(wisdomResults)}.`,
     () => `${getNameOpener()} не нужно всё решать сразу: достаточно ${getRandomItem(wisdomActions)}, чтобы ${getRandomItem(wisdomResults)}.`,
     () => `${getNameOpener()} когда становится трудно, попробуй ${getRandomItem(wisdomActions)} — так ${getRandomItem(wisdomResults)}.`,
     () => `${getNameOpener()} даже если мысль шумит как кастрюля, можно ${getRandomItem(wisdomActions)} — и тогда ${getRandomItem(wisdomResults)}.`,
     () => `${getNameOpener()} один спокойный жест, ${getRandomItem(wisdomActions)}, иногда делает так, что ${getRandomItem(wisdomResults)}.`,
-    () => `${getNameOpener()} ${capitalizeFirstLetter(getRandomItem(context.wisdomIntro))}. А дальше достаточно ${getRandomItem(wisdomActions)} — ${getRandomItem(wisdomResults)}.`
+    () => `${getNameOpener()} ${capitalizeFirstLetter(getDifferentRandomItem(context.wisdomIntro, wisdomLastIntroKey))}. А дальше достаточно ${getRandomItem(wisdomActions)} — ${getRandomItem(wisdomResults)}.`
   ];
 
   return generateUniqueMessage(wisdomUsedKey, () => {
@@ -679,8 +764,8 @@ function generatePraiseMessage() {
   const context = getTimeContext();
 
   const templates = [
-    () => `${getNameOpener()} ${getRandomItem(context.praiseIntro)} ${getRandomItem(praiseQualities)}, ${getRandomItem(praiseEndings)}.`,
-    () => `${getNameOpener()} ${getRandomItem(context.praiseIntro)} ${getRandomItem(praiseActions)}, ${getRandomItem(praiseEndings)}.`,
+    () => `${getNameOpener()} ${getDifferentRandomItem(context.praiseIntro, praiseLastIntroKey)} ${getRandomItem(praiseQualities)}, ${getRandomItem(praiseEndings)}.`,
+    () => `${getNameOpener()} ${getDifferentRandomItem(context.praiseIntro, praiseLastIntroKey)} ${getRandomItem(praiseActions)}, ${getRandomItem(praiseEndings)}.`,
     () => `${getNameOpener()} редкая способность уже есть — ${getRandomItem(praiseActions)}, ${getRandomItem(praiseEndings)}.`,
     () => `${getNameOpener()} хочется напомнить: ${getRandomItem(praiseQualities)}, ${getRandomItem(praiseEndings)}.`,
     () => `${getNameOpener()} даже сегодня, даже не в идеальной форме, ${getRandomItem(praiseQualities)}, ${getRandomItem(praiseEndings)}.`,
@@ -739,6 +824,7 @@ async function saveCurrentPhraseAsImage() {
   canvas.height = size;
 
   const context = canvas.getContext("2d");
+  const dailyBackground = getDailyBackground();
 
   const gradient = context.createRadialGradient(
     size * 0.25,
@@ -749,22 +835,26 @@ async function saveCurrentPhraseAsImage() {
     size
   );
 
-  gradient.addColorStop(0, "#2a2340");
-  gradient.addColorStop(0.45, "#09090d");
-  gradient.addColorStop(1, "#000000");
+  gradient.addColorStop(0, dailyBackground.canvas[0]);
+  gradient.addColorStop(0.45, dailyBackground.canvas[1]);
+  gradient.addColorStop(1, dailyBackground.canvas[2]);
 
   context.fillStyle = gradient;
   context.fillRect(0, 0, size, size);
 
-  drawSoftGlow(context, 180, 180, 220, "rgba(255, 255, 255, 0.09)");
-  drawSoftGlow(context, 840, 820, 260, "rgba(180, 140, 255, 0.12)");
-  drawSoftGlow(context, 820, 220, 190, "rgba(255, 180, 120, 0.08)");
+  dailyBackground.glows.forEach(glow => {
+    drawSoftGlow(context, glow[0], glow[1], glow[2], glow[3]);
+  });
 
   context.fillStyle = "rgba(255, 255, 255, 0.9)";
   context.font = "56px Georgia, serif";
   context.textAlign = "center";
   context.textBaseline = "middle";
-  context.fillText("✦", size / 2, 160);
+  context.fillText("✦", size / 2, 150);
+
+  context.fillStyle = "rgba(255, 255, 255, 0.56)";
+  context.font = "30px -apple-system, BlinkMacSystemFont, sans-serif";
+  context.fillText(getFormattedSaveDate(), size / 2, 220);
 
   context.fillStyle = "#f7f2e8";
   context.font = "54px Georgia, serif";
@@ -772,7 +862,7 @@ async function saveCurrentPhraseAsImage() {
   const lines = wrapText(context, text, size - padding * 2);
   const lineHeight = 72;
   const totalTextHeight = lines.length * lineHeight;
-  let startY = size / 2 - totalTextHeight / 2 + 36;
+  let startY = size / 2 - totalTextHeight / 2 + 70;
 
   lines.forEach((line, index) => {
     context.fillText(line, size / 2, startY + index * lineHeight);
