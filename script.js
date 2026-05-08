@@ -126,24 +126,24 @@ const nameOpeners = [
   "{name}.",
   "{name}, слушай.",
   "{name}, смотри.",
-  "{name}, маленькая весточка:",
-  "{name}, важное донесение:",
-  "{name}, без паники:",
-  "{name}, между нами:",
-  "{name}, официально сообщаем:",
-  "{name}, по секрету:",
-  "{name}, тихонько скажу:",
-  "{name}, вот что нашлось:",
-  "{name}, есть сообщение:",
-  "{name}, держи нужное слово:",
-  "{name}, сегодня можно так:"
+  "{name}, маленькая весточка.",
+  "{name}, важное донесение.",
+  "{name}, без паники.",
+  "{name}, между нами.",
+  "{name}, официально сообщаем.",
+  "{name}, по секрету.",
+  "{name}, тихонько скажу.",
+  "{name}, вот что нашлось.",
+  "{name}, есть сообщение.",
+  "{name}, держи нужное слово.",
+  "{name}, сегодня можно так."
 ];
 
 const moodScenes = [
   "в твою честь один кабачок отменил тревожное совещание и ушёл смотреть на облака",
   "маленький фонарь внутри уже включился и делает вид, что это он всё спас",
-  "внутренний пингвин сообщил: катастрофа переносится, потому что у него лапки и чай",
-  "один уставший ангел снял кроссовки, сел рядом и сказал: ну ничего, прорвёмся",
+  "внутренний пингвин сообщил, что катастрофа переносится, потому что у него лапки и чай",
+  "один уставший ангел снял кроссовки, сел рядом и сказал, что вы прорвётесь",
   "день попытался быть суровым, но поскользнулся на булочке и стал добрее",
   "грусть хотела войти без стука, но её остановил вежливый самовар",
   "тревога пришла с докладом, но забыла папку и теперь просто мнётся у двери",
@@ -234,11 +234,11 @@ const wisdomEndings = [
 const praiseLines = [
   "ты не просто справляешься. Ты ещё умудряешься оставаться живым человеком, а это редкость",
   "с тобой миру становится чуть менее пластиково",
-  "ты умеешь замечать тонкое — и не превращать это в шум. Это очень ценно",
+  "ты умеешь замечать тонкое и не превращать это в шум. Это очень ценно",
   "в тебе есть не показная, а настоящая сила. Та, которая без прожектора",
   "ты не обязана быть удобной, чтобы быть хорошей",
   "ты умеешь продолжать, даже когда внутри не играет торжественная музыка",
-  "в тебе есть редкое качество: ты чувствуешь глубоко, но всё равно идёшь",
+  "в тебе есть редкое качество. Ты чувствуешь глубоко, но всё равно идёшь",
   "ты не черновик человека. Ты уже целая история",
   "у тебя есть внутренний свет, который не просит разрешения",
   "ты делаешь обычные вещи живыми, и это заметно",
@@ -251,7 +251,7 @@ const praiseLines = [
   "в тебе много тихой храбрости. Не театральной, а рабочей",
   "ты не обязана сиять, чтобы быть ценной. Но всё равно иногда сияешь",
   "ты умеешь возвращаться к себе. Это огромная штука",
-  "ты не просто проходишь через день — ты ещё замечаешь, из чего он сделан",
+  "ты не просто проходишь через день. Ты ещё замечаешь, из чего он сделан",
   "у тебя есть собственный внутренний почерк. Его не надо исправлять под линейку",
   "ты умеешь быть настоящей, даже когда это не самый удобный вариант",
   "в тебе есть мягкость, которая не разваливается от ветра",
@@ -475,12 +475,12 @@ function generateMoodMessage() {
   const templates = [
     () => `${getNameOpener()} ${getRandomItem(moodScenes)}. ${getRandomItem(moodEndings)}`,
     () => `${getNameOpener()} ${capitalizeFirstLetter(getRandomItem(moodScenes))}. ${getRandomItem(moodEndings)}`,
-    () => `${getNameOpener()} если коротко: ${getRandomItem(moodScenes)}. ${getRandomItem(moodEndings)}`,
-    () => `${getNameOpener()} сегодня так: ${getRandomItem(moodScenes)}. ${getRandomItem(moodEndings)}`,
-    () => `${getNameOpener()} хорошая новость: ${getRandomItem(moodScenes)}. ${getRandomItem(moodEndings)}`,
-    () => `${getNameOpener()} маленький отчёт из отдела абсурда: ${getRandomItem(moodScenes)}. ${getRandomItem(moodEndings)}`,
-    () => `${getNameOpener()} по внутренней сводке: ${getRandomItem(moodScenes)}. ${getRandomItem(moodEndings)}`,
-    () => `${getNameOpener()} настроение докладывает: ${getRandomItem(moodScenes)}. ${getRandomItem(moodEndings)}`
+    () => `${getNameOpener()} Если коротко, ${getRandomItem(moodScenes)}. ${getRandomItem(moodEndings)}`,
+    () => `${getNameOpener()} Сегодня так. ${capitalizeFirstLetter(getRandomItem(moodScenes))}. ${getRandomItem(moodEndings)}`,
+    () => `${getNameOpener()} Хорошая новость. ${capitalizeFirstLetter(getRandomItem(moodScenes))}. ${getRandomItem(moodEndings)}`,
+    () => `${getNameOpener()} Маленький отчёт из отдела абсурда. ${capitalizeFirstLetter(getRandomItem(moodScenes))}. ${getRandomItem(moodEndings)}`,
+    () => `${getNameOpener()} По внутренней сводке всё не так плохо. ${capitalizeFirstLetter(getRandomItem(moodScenes))}. ${getRandomItem(moodEndings)}`,
+    () => `${getNameOpener()} Настроение докладывает осторожно, но уверенно. ${capitalizeFirstLetter(getRandomItem(moodScenes))}. ${getRandomItem(moodEndings)}`
   ];
 
   return generateUniqueMessage(moodUsedKey, () => {
@@ -492,13 +492,13 @@ function generateMoodMessage() {
 function generateWisdomMessage() {
   const templates = [
     () => `${getNameOpener()} ${getRandomItem(wisdomThoughts)}. ${getRandomItem(wisdomEndings)}`,
-    () => `${getNameOpener()} совет дня: ${getRandomItem(wisdomThoughts)}. ${getRandomItem(wisdomEndings)}`,
-    () => `${getNameOpener()} сегодня попробуй вот что: ${getRandomItem(wisdomThoughts)}. ${getRandomItem(wisdomEndings)}`,
-    () => `${getNameOpener()} важная мысль без занудства: ${getRandomItem(wisdomThoughts)}. ${getRandomItem(wisdomEndings)}`,
-    () => `${getNameOpener()} можно так: ${getRandomItem(wisdomThoughts)}. ${getRandomItem(wisdomEndings)}`,
-    () => `${getNameOpener()} тихий совет: ${getRandomItem(wisdomThoughts)}. ${getRandomItem(wisdomEndings)}`,
-    () => `${getNameOpener()} сегодня лучше помнить вот это: ${getRandomItem(wisdomThoughts)}. ${getRandomItem(wisdomEndings)}`,
-    () => `${getNameOpener()} без большого драматического оркестра: ${getRandomItem(wisdomThoughts)}. ${getRandomItem(wisdomEndings)}`
+    () => `${getNameOpener()} Совет дня простой. ${capitalizeFirstLetter(getRandomItem(wisdomThoughts))}. ${getRandomItem(wisdomEndings)}`,
+    () => `${getNameOpener()} Сегодня можно попробовать вот что. ${capitalizeFirstLetter(getRandomItem(wisdomThoughts))}. ${getRandomItem(wisdomEndings)}`,
+    () => `${getNameOpener()} Важная мысль без занудства. ${capitalizeFirstLetter(getRandomItem(wisdomThoughts))}. ${getRandomItem(wisdomEndings)}`,
+    () => `${getNameOpener()} Можно так. ${capitalizeFirstLetter(getRandomItem(wisdomThoughts))}. ${getRandomItem(wisdomEndings)}`,
+    () => `${getNameOpener()} Тихий совет. ${capitalizeFirstLetter(getRandomItem(wisdomThoughts))}. ${getRandomItem(wisdomEndings)}`,
+    () => `${getNameOpener()} Сегодня лучше помнить вот это. ${capitalizeFirstLetter(getRandomItem(wisdomThoughts))}. ${getRandomItem(wisdomEndings)}`,
+    () => `${getNameOpener()} Без большого драматического оркестра. ${capitalizeFirstLetter(getRandomItem(wisdomThoughts))}. ${getRandomItem(wisdomEndings)}`
   ];
 
   return generateUniqueMessage(wisdomUsedKey, () => {
@@ -510,13 +510,13 @@ function generateWisdomMessage() {
 function generatePraiseMessage() {
   const templates = [
     () => `${getNameOpener()} ${getRandomItem(praiseLines)}. ${getRandomItem(praiseEndings)}`,
-    () => `${getNameOpener()} хочу напомнить: ${getRandomItem(praiseLines)}. ${getRandomItem(praiseEndings)}`,
-    () => `${getNameOpener()} если честно: ${getRandomItem(praiseLines)}. ${getRandomItem(praiseEndings)}`,
-    () => `${getNameOpener()} важный факт: ${getRandomItem(praiseLines)}. ${getRandomItem(praiseEndings)}`,
-    () => `${getNameOpener()} смотри, какая штука: ${getRandomItem(praiseLines)}. ${getRandomItem(praiseEndings)}`,
-    () => `${getNameOpener()} это стоит сказать вслух: ${getRandomItem(praiseLines)}. ${getRandomItem(praiseEndings)}`,
-    () => `${getNameOpener()} маленькая честная похвала: ${getRandomItem(praiseLines)}. ${getRandomItem(praiseEndings)}`,
-    () => `${getNameOpener()} я бы это не пропускала: ${getRandomItem(praiseLines)}. ${getRandomItem(praiseEndings)}`
+    () => `${getNameOpener()} Хочу напомнить. ${capitalizeFirstLetter(getRandomItem(praiseLines))}. ${getRandomItem(praiseEndings)}`,
+    () => `${getNameOpener()} Если честно. ${capitalizeFirstLetter(getRandomItem(praiseLines))}. ${getRandomItem(praiseEndings)}`,
+    () => `${getNameOpener()} Важный факт. ${capitalizeFirstLetter(getRandomItem(praiseLines))}. ${getRandomItem(praiseEndings)}`,
+    () => `${getNameOpener()} Смотри, какая штука. ${capitalizeFirstLetter(getRandomItem(praiseLines))}. ${getRandomItem(praiseEndings)}`,
+    () => `${getNameOpener()} Это стоит сказать вслух. ${capitalizeFirstLetter(getRandomItem(praiseLines))}. ${getRandomItem(praiseEndings)}`,
+    () => `${getNameOpener()} Маленькая честная похвала. ${capitalizeFirstLetter(getRandomItem(praiseLines))}. ${getRandomItem(praiseEndings)}`,
+    () => `${getNameOpener()} Я бы это не пропускала. ${capitalizeFirstLetter(getRandomItem(praiseLines))}. ${getRandomItem(praiseEndings)}`
   ];
 
   return generateUniqueMessage(praiseUsedKey, () => {
