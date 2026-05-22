@@ -435,6 +435,30 @@ function setButtonsDisabled(isDisabled) {
   document.getElementById("praiseButton").disabled = isDisabled;
 }
 
+let loadingAnimationTimer = null;
+
+function startLoadingAnimation() {
+  const loadingEmojis = ["·", "✦", "☽", "♡", "☁︎", "✺", "◌"];
+  let step = 0;
+
+  stopLoadingAnimation();
+
+  loadingAnimationTimer = setInterval(() => {
+    const leftEmoji = loadingEmojis[step % loadingEmojis.length];
+    const rightEmoji = loadingEmojis[(step + 3) % loadingEmojis.length];
+
+    emojiElement.textContent = `${leftEmoji} ${rightEmoji}`;
+
+    step = step + 1;
+  }, 380);
+}
+
+function stopLoadingAnimation() {
+  if (loadingAnimationTimer) {
+    clearInterval(loadingAnimationTimer);
+    loadingAnimationTimer = null;
+  }
+}
 async function generateAIMessage(type) {
   const response = await fetch(API_URL, {
     method: "POST",
@@ -457,7 +481,30 @@ async function generateAIMessage(type) {
 
   return data.message.trim();
 }
+let loadingAnimationTimer = null;
 
+function startLoadingAnimation(emojiList) {
+  const loadingEmojis = ["·", "✦", "☽", "♡", "☁︎", "✺", "◌"];
+  let step = 0;
+
+  stopLoadingAnimation();
+
+  loadingAnimationTimer = setInterval(() => {
+    const leftEmoji = loadingEmojis[step % loadingEmojis.length];
+    const rightEmoji = loadingEmojis[(step + 3) % loadingEmojis.length];
+
+    emojiElement.textContent = `${leftEmoji} ${rightEmoji}`;
+
+    step = step + 1;
+  }, 380);
+}
+
+function stopLoadingAnimation() {
+  if (loadingAnimationTimer) {
+    clearInterval(loadingAnimationTimer);
+    loadingAnimationTimer = null;
+  }
+}
 async function showAIMessage(type, eventName, emojiList, loadingText) {
   trackEvent(eventName);
 
@@ -465,20 +512,24 @@ async function showAIMessage(type, eventName, emojiList, loadingText) {
   messageElement.textContent = loadingText;
 
   hideSaveButton();
-  setButtonsDisabled(true);
+setButtonsDisabled(true);
+startLoadingAnimation();
 
-  try {
+try {
     const message = await generateAIMessage(type);
-    messageElement.textContent = message;
-    showSaveButton();
+stopLoadingAnimation();
+messageElement.textContent = `${getNameOpener()} ${message}`;
+showSaveButton();
   } catch (error) {
     console.error(error);
+  stopLoadingAnimation();
     messageElement.textContent =
       "Что-то зашуршало не там. Попробуй ещё раз — внутренний ёжик уже чинит проводок.";
     showSaveButton();
-  } finally {
-    setButtonsDisabled(false);
-  }
+finally {
+  stopLoadingAnimation();
+  setButtonsDisabled(false);
+}
 }
 function getDifferentRandomItem(items, storageKey) {
   const lastItem = localStorage.getItem(storageKey);
