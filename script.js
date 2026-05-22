@@ -24,8 +24,6 @@ const wisdomButton = document.getElementById("wisdomButton");
 const praiseButton = document.getElementById("praiseButton");
 
 const nameKey = "childhoodName";
-const nameLastOpenerKey = "nameLastOpener";
-
 let loadingAnimationTimer = null;
 
 const backgroundClasses = [
@@ -124,50 +122,12 @@ const footerPhrases = [
 
 const nameOpeners = [
   "{name},",
-  "{name}.",
-  "{name}, слушай.",
-  "{name}, смотри.",
-  "{name}, маленькая весточка.",
-  "{name}, важное донесение.",
-  "{name}, без паники.",
-  "{name}, между нами.",
-  "{name}, официально сообщаем.",
-  "{name}, по секрету.",
-  "{name}, тихонько скажу.",
-  "{name}, вот что нашлось.",
-  "{name}, есть сообщение.",
-  "{name}, держи нужное слово.",
-  "{name}, сегодня можно так."
-];
-
-const moodLoadingTexts = [
-  "Внутренний диспетчер надевает наушники и слушает настроение...",
-  "Сейчас посмотрим, что там шуршит под сердцем...",
-  "Минутку, маленький ёжик проверяет приборы настроения...",
-  "Облако-практикант уже несёт сводку изнутри...",
-  "Сейчас лампа внутри мигнёт и что-нибудь поймёт...",
-  "Настроение ушло за булочкой, но уже возвращается...",
-  "Тихо-тихо, внутренний самовар собирает пар и смысл..."
-];
-
-const wisdomLoadingTexts = [
-  "Самовар мудрости закипает, но без нравоучений...",
-  "Маленькая мысль дня ищет тапочки...",
-  "Сейчас облако сформулирует что-то негромкое...",
-  "Минутку, внутренний архивариус достаёт мягкую записку...",
-  "Мудрость идёт пешком, зато без пафоса...",
-  "Сейчас лампа подумает и не будет строить из себя солнце...",
-  "Тихий совет уже проснулся, просто расчёсывает антенны..."
-];
-
-const praiseLoadingTexts = [
-  "Внутренняя булочка подбирает похвалу потеплее...",
-  "Сейчас маленький хор хороших слов встанет полукругом...",
-  "Похвала гладит воротничок и готовится выйти...",
-  "Минутку, диспетчер нежности ищет правильную кнопку...",
-  "Сейчас достанем хорошее слово из мягкого кармана...",
-  "Внутренний ёжик репетирует комплимент без плаката...",
-  "Похвала уже идёт, просто несёт с собой плед..."
+  "{name}, слушай,",
+  "{name}, смотри,",
+  "{name}, тихонько,",
+  "{name}, вот что,",
+  "{name}, маленькая весточка,",
+  "{name}, по секрету,"
 ];
 
 function startApp() {
@@ -331,19 +291,15 @@ function getRandomItem(items) {
   return items[Math.floor(Math.random() * items.length)];
 }
 
-function getDifferentRandomItem(items, storageKey) {
-  const lastItem = localStorage.getItem(storageKey);
-  const availableItems = items.filter((item) => item !== lastItem);
-  const chosenItem = getRandomItem(availableItems.length ? availableItems : items);
-
-  localStorage.setItem(storageKey, chosenItem);
-
-  return chosenItem;
+function getNameOpener() {
+  const opener = getRandomItem(nameOpeners);
+  return opener.replace("{name}", getName());
 }
 
-function getNameOpener() {
-  const opener = getDifferentRandomItem(nameOpeners, nameLastOpenerKey);
-  return opener.replace("{name}", getName());
+function lowerFirstLetter(text) {
+  if (!text) return text;
+
+  return text.charAt(0).toLocaleLowerCase("ru-RU") + text.slice(1);
 }
 
 function setButtonsDisabled(isDisabled) {
@@ -378,19 +334,16 @@ async function generateAIMessage(type) {
 }
 
 function startLoadingAnimation() {
-  const loadingEmojis = ["·", "✦", "☽", "♡", "☁︎", "✺", "◌"];
+  const loadingFrames = ["✦", "✦ ·", "✦ · ·", "☽ · ·", "♡ ·", "☁︎", "✺ ·"];
   let step = 0;
 
   stopLoadingAnimation();
+  messageElement.textContent = "";
 
   loadingAnimationTimer = setInterval(() => {
-    const leftEmoji = loadingEmojis[step % loadingEmojis.length];
-    const rightEmoji = loadingEmojis[(step + 3) % loadingEmojis.length];
-
-    emojiElement.textContent = `${leftEmoji} ${rightEmoji}`;
-
+    emojiElement.textContent = loadingFrames[step % loadingFrames.length];
     step = step + 1;
-  }, 380);
+  }, 260);
 }
 
 function stopLoadingAnimation() {
@@ -400,11 +353,8 @@ function stopLoadingAnimation() {
   }
 }
 
-async function showAIMessage(type, eventName, emojiList, loadingText) {
+async function showAIMessage(type, eventName, emojiList) {
   trackEvent(eventName);
-
-  emojiElement.textContent = getRandomItem(emojiList);
-  messageElement.textContent = loadingText;
 
   hideSaveButton();
   setButtonsDisabled(true);
@@ -416,7 +366,7 @@ async function showAIMessage(type, eventName, emojiList, loadingText) {
     stopLoadingAnimation();
 
     emojiElement.textContent = getRandomItem(emojiList);
-    messageElement.textContent = `${getNameOpener()} ${message}`;
+    messageElement.textContent = `${getNameOpener()} ${lowerFirstLetter(message)}`;
 
     showSaveButton();
   } catch (error) {
@@ -426,7 +376,7 @@ async function showAIMessage(type, eventName, emojiList, loadingText) {
 
     emojiElement.textContent = "☁︎";
     messageElement.textContent =
-      "Что-то зашуршало не там. Попробуй ещё раз — внутренний ёжик уже чинит проводок.";
+      `${getNameOpener()} что-то зашуршало не там. Попробуй ещё раз — облако уже чинит проводок.`;
 
     showSaveButton();
   } finally {
@@ -439,8 +389,7 @@ function showMood() {
   showAIMessage(
     "mood",
     "mood_clicked",
-    ["☀︎", "✦", "☁︎", "♡", "☽", "✶", "✺"],
-    getRandomItem(moodLoadingTexts)
+    ["☀︎", "✦", "☁︎", "♡", "☽", "✶", "✺"]
   );
 }
 
@@ -448,8 +397,7 @@ function showWisdom() {
   showAIMessage(
     "wisdom",
     "wisdom_clicked",
-    ["☽", "◌", "◇", "✧", "○", "✦"],
-    getRandomItem(wisdomLoadingTexts)
+    ["☽", "◌", "◇", "✧", "○", "✦"]
   );
 }
 
@@ -457,8 +405,7 @@ function showPraise() {
   showAIMessage(
     "praise",
     "praise_clicked",
-    ["♡", "✶", "✺", "❋", "✦", "✧"],
-    getRandomItem(praiseLoadingTexts)
+    ["♡", "✶", "✺", "❋", "✦", "✧"]
   );
 }
 
