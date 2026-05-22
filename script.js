@@ -334,6 +334,30 @@ async function generateAIMessage(type) {
 }
 
 function startLoadingAnimation() {
+  const loadingFrames = [
+    "✦",
+    "✦ ·",
+    "✦ · ·",
+    "☽ · ·",
+    "♡ ·",
+    "☁︎ шуршит ·",
+    "маленькая лампа думает · ·",
+    "булочка ищет слово · · ·",
+    "облако несёт записку · ·"
+  ];
+
+  let step = 0;
+
+  stopLoadingAnimation();
+
+  emojiElement.textContent = "✦";
+  messageElement.textContent = loadingFrames[0];
+
+  loadingAnimationTimer = setInterval(() => {
+    messageElement.textContent = loadingFrames[step % loadingFrames.length];
+    step = step + 1;
+  }, 420);
+}
   const loadingFrames = ["✦", "✦ ·", "✦ · ·", "☽ · ·", "♡ ·", "☁︎", "✺ ·"];
   let step = 0;
 
