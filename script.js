@@ -278,6 +278,10 @@ const praiseEndings = [
 ];
 
 function startApp() {
+  if (saveImageButton) {
+    saveImageButton.textContent = "Поделиться";
+  }
+
   applyDailyBackground();
   updateTodayDate();
   updateDailyFooterPhrase();
@@ -301,11 +305,23 @@ function getDayNumber() {
   return Math.floor((today - startDate) / dayInMilliseconds);
 }
 
-function getDailyBackground() {
-  const dayNumber = getDayNumber();
-  return dailyBackgrounds[Math.abs(dayNumber) % dailyBackgrounds.length];
+function getNameHash() {
+  const savedName = localStorage.getItem(nameKey) || "guest";
+  let hash = 0;
+
+  for (let i = 0; i < savedName.length; i++) {
+    hash = hash + savedName.charCodeAt(i) * (i + 1);
+  }
+
+  return hash;
 }
 
+function getDailyBackground() {
+  const dayNumber = getDayNumber();
+  const nameHash = getNameHash();
+
+  return dailyBackgrounds[Math.abs(dayNumber + nameHash) % dailyBackgrounds.length];
+}
 function applyDailyBackground() {
   const background = getDailyBackground();
 
@@ -379,6 +395,7 @@ function resetName() {
 }
 
 function showMainScreen(name) {
+    applyDailyBackground();
   nameScreen.classList.add("hidden");
   mainScreen.classList.remove("hidden");
   messageElement.textContent = `${formatName(name)}, нажми кнопку — и приложение скажет что-нибудь нужное.`;
