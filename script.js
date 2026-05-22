@@ -410,7 +410,59 @@ function formatName(name) {
 function getRandomItem(items) {
   return items[Math.floor(Math.random() * items.length)];
 }
+const API_URL = "https://nuzhnye-slova-api.vercel.app/api/generate";
 
+function setButtonsDisabled(isDisabled) {
+  document.getElementById("moodButton").disabled = isDisabled;
+  document.getElementById("wisdomButton").disabled = isDisabled;
+  document.getElementById("praiseButton").disabled = isDisabled;
+}
+
+async function generateAIMessage(type) {
+  const response = await fetch(API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ type })
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    console.error("AI generation error:", data);
+    throw new Error(data?.error || "AI generation failed");
+  }
+
+  if (!data.message) {
+    throw new Error("Empty AI message");
+  }
+
+  return data.message.trim();
+}
+
+async function showAIMessage(type, eventName, emojiList, loadingText) {
+  trackEvent(eventName);
+
+  emojiElement.textContent = getRandomItem(emojiList);
+  messageElement.textContent = loadingText;
+
+  hideSaveButton();
+  setButtonsDisabled(true);
+
+  try {
+    const message = await generateAIMessage(type);
+    messageElement.textContent = message;
+    showSaveButton();
+  } catch (error) {
+    console.error(error);
+    messageElement.textContent =
+      "Что-то зашуршало не там. Попробуй ещё раз — внутренний ёжик уже чинит проводок.";
+    showSaveButton();
+  } finally {
+    setButtonsDisabled(false);
+  }
+}
 function getDifferentRandomItem(items, storageKey) {
   const lastItem = localStorage.getItem(storageKey);
   const availableItems = items.filter(item => item !== lastItem);
@@ -531,24 +583,30 @@ function capitalizeFirstLetter(text) {
 }
 
 function showMood() {
-  trackEvent("mood_clicked");
-  emojiElement.textContent = getRandomItem(["☀︎", "✦", "☁︎", "♡", "☽", "✶", "✺"]);
-  messageElement.textContent = generateMoodMessage();
-  showSaveButton();
+  showAIMessage(
+    "mood",
+    "mood_clicked",
+    ["☀︎", "✦", "☁︎", "♡", "☽", "✶", "✺"],
+    "Секундочку, внутренний диспетчер слушает настроение..."
+  );
 }
 
 function showWisdom() {
-  trackEvent("wisdom_clicked");
-  emojiElement.textContent = getRandomItem(["☽", "◌", "◇", "✧", "○", "✦"]);
-  messageElement.textContent = generateWisdomMessage();
-  showSaveButton();
+  showAIMessage(
+    "wisdom",
+    "wisdom_clicked",
+    ["☽", "◌", "◇", "✧", "○", "✦"],
+    "Секундочку, самовар мудрости закипает..."
+  );
 }
 
 function showPraise() {
-  trackEvent("praise_clicked");
-  emojiElement.textContent = getRandomItem(["♡", "✶", "✺", "❋", "✦", "✧"]);
-  messageElement.textContent = generatePraiseMessage();
-  showSaveButton();
+  showAIMessage(
+    "praise",
+    "praise_clicked",
+    ["♡", "✶", "✺", "❋", "✦", "✧"],
+    "Секундочку, внутренняя булочка подбирает похвалу..."
+  );
 }
 
 async function saveCurrentPhraseAsImage() {
