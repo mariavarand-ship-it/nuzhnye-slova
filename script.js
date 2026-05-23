@@ -85,17 +85,19 @@ function startApp() {
 }
 
 function showNameScreen() {
+  if (!nameScreen || !mainScreen) return;
+
   nameScreen.classList.remove("hidden");
   mainScreen.classList.add("hidden");
 
   setTimeout(() => {
-    if (nameInput) {
-      nameInput.focus();
-    }
+    if (nameInput) nameInput.focus();
   }, 100);
 }
 
 function showMainScreen(name) {
+  if (!nameScreen || !mainScreen || !messageElement || !emojiElement) return;
+
   applyDailyBackground();
 
   nameScreen.classList.add("hidden");
@@ -108,6 +110,8 @@ function showMainScreen(name) {
 }
 
 function saveName() {
+  if (!nameInput) return;
+
   const name = nameInput.value.trim();
 
   if (!name) {
@@ -122,10 +126,18 @@ function saveName() {
 
 function resetName() {
   localStorage.removeItem(nameKey);
-  nameInput.value = "";
 
-  emojiElement.textContent = "✦";
-  messageElement.textContent = "Нажми кнопку — и приложение скажет что-нибудь нужное.";
+  if (nameInput) {
+    nameInput.value = "";
+  }
+
+  if (emojiElement) {
+    emojiElement.textContent = "✦";
+  }
+
+  if (messageElement) {
+    messageElement.textContent = "Нажми кнопку — и приложение скажет что-нибудь нужное.";
+  }
 
   hideSaveButton();
   showNameScreen();
@@ -169,6 +181,16 @@ function updateTodayDate() {
   });
 
   todayDateElement.textContent = `сегодня · ${formattedDate}`;
+}
+
+function getFormattedSaveDate() {
+  const today = new Date();
+
+  return today.toLocaleDateString("ru-RU", {
+    day: "numeric",
+    month: "long",
+    year: "numeric"
+  });
 }
 
 function updateDailyFooterPhrase() {
@@ -227,6 +249,8 @@ function setButtonsDisabled(isDisabled) {
 }
 
 function startLoadingAnimation() {
+  if (!messageElement || !emojiElement) return;
+
   const frames = [
     "✦",
     "✦ ·",
@@ -291,17 +315,27 @@ async function showAIMessage(type, eventName, emojiList) {
 
     stopLoadingAnimation();
 
-    emojiElement.textContent = getRandomItem(emojiList);
-    messageElement.textContent = `${getNameOpener()} ${lowerFirstLetter(message)}`;
+    if (emojiElement) {
+      emojiElement.textContent = getRandomItem(emojiList);
+    }
+
+    if (messageElement) {
+      messageElement.textContent = `${getNameOpener()} ${lowerFirstLetter(message)}`;
+    }
 
     showSaveButton();
   } catch (error) {
     console.error(error);
-
     stopLoadingAnimation();
 
-    emojiElement.textContent = "☁︎";
-    messageElement.textContent = `${getNameOpener()} что-то зашуршало не там. Попробуй ещё раз — облако чинит проводок.`;
+    if (emojiElement) {
+      emojiElement.textContent = "☁︎";
+    }
+
+    if (messageElement) {
+      messageElement.textContent =
+        `${getNameOpener()} что-то зашуршало не там. Попробуй ещё раз — облако чинит проводок.`;
+    }
 
     showSaveButton();
   } finally {
@@ -321,8 +355,11 @@ function showWisdom() {
 function showPraise() {
   showAIMessage("praise", "praise_clicked", ["♡", "✶", "✺", "❋", "✦", "✧"]);
 }
+
 async function shareCurrentPhrase() {
   trackEvent("image_save_clicked");
+
+  if (!messageElement) return;
 
   const text = messageElement.textContent.trim();
   const defaultText = "Нажми кнопку — и приложение скажет что-нибудь нужное.";
@@ -387,49 +424,43 @@ async function shareCurrentPhrase() {
   context.font = "30px -apple-system, BlinkMacSystemFont, sans-serif";
   context.fillText("нужные слова", size / 2, size - 110);
 
-  canvas.toBlob(async (blob) => {
-    if (!blob) return;
-
-    const file = new File([blob], "nuzhnye-slova.png", {
-      type: "image/png"
-    });
-
-    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-      try {
-        await navigator.share({
-          files: [file],
-          title: "Нужные слова",
-          text: "Сохранила нужные слова"
-        });
-
-        return;
-      } catch (error) {
-        // Пользователь мог просто закрыть меню «Поделиться».
-      }
-    }
-
-    const imageUrl = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-
-    link.href = imageUrl;
-    link.download = "nuzhnye-slova.png";
-
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-
-    setTimeout(() => {
-      URL.revokeObjectURL(imageUrl);
-    }, 1000);
-  }, "image/png");
-}function getFormattedSaveDate() {
-  const today = new Date();
-
-  return today.toLocaleDateString("ru-RU", {
-    day: "numeric",
-    month: "long",
-    year: "numeric"
+  const blob = await new Promise((resolve) => {
+    canvas.toBlob(resolve, "image/png");
   });
+
+  if (!blob) return;
+
+  const file = new File([blob], "nuzhnye-slova.png", {
+    type: "image/png"
+  });
+
+  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    try {
+      await navigator.share({
+        files: [file],
+        title: "Нужные слова",
+        text: "Сохранила нужные слова"
+      });
+
+      return;
+    } catch (error) {
+      // Пользователь мог закрыть меню «Поделиться».
+    }
+  }
+
+  const imageUrl = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+
+  link.href = imageUrl;
+  link.download = "nuzhnye-slova.png";
+
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+
+  setTimeout(() => {
+    URL.revokeObjectURL(imageUrl);
+  }, 1000);
 }
 
 function getCardBackground() {
@@ -533,31 +564,6 @@ function wrapText(context, text, maxWidth) {
   }
 
   return lines;
-}
-  const text = messageElement.textContent.trim();
-
-  if (!text) {
-    return;
-  }
-
-  if (navigator.share) {
-    try {
-      await navigator.share({
-        title: "Нужные слова",
-        text
-      });
-      return;
-    } catch (error) {
-      // Пользователь мог закрыть системное меню — это нормально.
-    }
-  }
-
-  try {
-    await navigator.clipboard.writeText(text);
-    messageElement.textContent = `${text}\n\nскопировано в буфер`;
-  } catch (error) {
-    console.error(error);
-  }
 }
 
 if (saveNameButton) {
