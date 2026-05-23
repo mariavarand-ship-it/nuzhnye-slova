@@ -321,8 +321,219 @@ function showWisdom() {
 function showPraise() {
   showAIMessage("praise", "praise_clicked", ["♡", "✶", "✺", "❋", "✦", "✧"]);
 }
-
 async function shareCurrentPhrase() {
+  trackEvent("image_save_clicked");
+
+  const text = messageElement.textContent.trim();
+  const defaultText = "Нажми кнопку — и приложение скажет что-нибудь нужное.";
+
+  if (!text || text === defaultText) {
+    return;
+  }
+
+  const canvas = document.createElement("canvas");
+  const size = 1080;
+  const padding = 96;
+
+  canvas.width = size;
+  canvas.height = size;
+
+  const context = canvas.getContext("2d");
+  const cardBackground = getCardBackground();
+
+  const gradient = context.createRadialGradient(
+    size * 0.25,
+    size * 0.2,
+    40,
+    size * 0.5,
+    size * 0.5,
+    size
+  );
+
+  gradient.addColorStop(0, cardBackground.canvas[0]);
+  gradient.addColorStop(0.45, cardBackground.canvas[1]);
+  gradient.addColorStop(1, cardBackground.canvas[2]);
+
+  context.fillStyle = gradient;
+  context.fillRect(0, 0, size, size);
+
+  cardBackground.glows.forEach((glow) => {
+    drawSoftGlow(context, glow[0], glow[1], glow[2], glow[3]);
+  });
+
+  context.fillStyle = "rgba(255, 255, 255, 0.9)";
+  context.font = "56px Georgia, serif";
+  context.textAlign = "center";
+  context.textBaseline = "middle";
+  context.fillText("✦", size / 2, 150);
+
+  context.fillStyle = "rgba(255, 255, 255, 0.56)";
+  context.font = "30px -apple-system, BlinkMacSystemFont, sans-serif";
+  context.fillText(getFormattedSaveDate(), size / 2, 220);
+
+  context.fillStyle = "#f7f2e8";
+  context.font = "54px Georgia, serif";
+
+  const lines = wrapText(context, text, size - padding * 2);
+  const lineHeight = 72;
+  const totalTextHeight = lines.length * lineHeight;
+  const startY = size / 2 - totalTextHeight / 2 + 70;
+
+  lines.forEach((line, index) => {
+    context.fillText(line, size / 2, startY + index * lineHeight);
+  });
+
+  context.fillStyle = "rgba(255, 255, 255, 0.46)";
+  context.font = "30px -apple-system, BlinkMacSystemFont, sans-serif";
+  context.fillText("нужные слова", size / 2, size - 110);
+
+  canvas.toBlob(async (blob) => {
+    if (!blob) return;
+
+    const file = new File([blob], "nuzhnye-slova.png", {
+      type: "image/png"
+    });
+
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      try {
+        await navigator.share({
+          files: [file],
+          title: "Нужные слова",
+          text: "Сохранила нужные слова"
+        });
+
+        return;
+      } catch (error) {
+        // Пользователь мог просто закрыть меню «Поделиться».
+      }
+    }
+
+    const imageUrl = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+
+    link.href = imageUrl;
+    link.download = "nuzhnye-slova.png";
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    setTimeout(() => {
+      URL.revokeObjectURL(imageUrl);
+    }, 1000);
+  }, "image/png");
+}function getFormattedSaveDate() {
+  const today = new Date();
+
+  return today.toLocaleDateString("ru-RU", {
+    day: "numeric",
+    month: "long",
+    year: "numeric"
+  });
+}
+
+function getCardBackground() {
+  const currentClass = backgroundClasses.find((className) =>
+    document.body.classList.contains(className)
+  );
+
+  const backgrounds = {
+    "bg-aurora": {
+      canvas: ["#2a2340", "#09090d", "#000000"],
+      glows: [
+        [180, 180, 220, "rgba(255, 255, 255, 0.09)"],
+        [840, 820, 260, "rgba(180, 140, 255, 0.12)"],
+        [820, 220, 190, "rgba(255, 180, 120, 0.08)"]
+      ]
+    },
+    "bg-plum": {
+      canvas: ["#3a1f3d", "#170b22", "#050407"],
+      glows: [
+        [190, 160, 230, "rgba(255, 180, 230, 0.12)"],
+        [820, 780, 280, "rgba(160, 120, 255, 0.14)"],
+        [820, 240, 200, "rgba(255, 210, 160, 0.08)"]
+      ]
+    },
+    "bg-ink": {
+      canvas: ["#18243a", "#070b14", "#000000"],
+      glows: [
+        [180, 200, 240, "rgba(160, 210, 255, 0.12)"],
+        [820, 820, 280, "rgba(120, 120, 255, 0.11)"],
+        [780, 220, 190, "rgba(255, 255, 255, 0.07)"]
+      ]
+    },
+    "bg-moss": {
+      canvas: ["#223b2a", "#09140d", "#020403"],
+      glows: [
+        [180, 180, 230, "rgba(210, 255, 190, 0.12)"],
+        [840, 800, 270, "rgba(120, 220, 170, 0.11)"],
+        [800, 230, 190, "rgba(255, 230, 170, 0.08)"]
+      ]
+    },
+    "bg-ember": {
+      canvas: ["#472419", "#150805", "#030101"],
+      glows: [
+        [180, 170, 230, "rgba(255, 190, 120, 0.13)"],
+        [840, 820, 280, "rgba(255, 120, 90, 0.11)"],
+        [800, 240, 190, "rgba(255, 240, 190, 0.08)"]
+      ]
+    },
+    "bg-moon": {
+      canvas: ["#243043", "#0b111c", "#030407"],
+      glows: [
+        [180, 180, 230, "rgba(220, 235, 255, 0.12)"],
+        [840, 800, 280, "rgba(170, 190, 255, 0.12)"],
+        [800, 230, 190, "rgba(255, 255, 255, 0.07)"]
+      ]
+    },
+    "bg-candy": {
+      canvas: ["#493050", "#170b20", "#050204"],
+      glows: [
+        [180, 170, 230, "rgba(255, 190, 230, 0.13)"],
+        [840, 800, 270, "rgba(190, 150, 255, 0.13)"],
+        [800, 230, 190, "rgba(255, 220, 170, 0.08)"]
+      ]
+    }
+  };
+
+  return backgrounds[currentClass] || backgrounds["bg-aurora"];
+}
+
+function drawSoftGlow(context, x, y, radius, color) {
+  const glow = context.createRadialGradient(x, y, 0, x, y, radius);
+
+  glow.addColorStop(0, color);
+  glow.addColorStop(1, "rgba(0, 0, 0, 0)");
+
+  context.fillStyle = glow;
+  context.beginPath();
+  context.arc(x, y, radius, 0, Math.PI * 2);
+  context.fill();
+}
+
+function wrapText(context, text, maxWidth) {
+  const words = text.split(" ");
+  const lines = [];
+  let currentLine = "";
+
+  words.forEach((word) => {
+    const testLine = currentLine ? `${currentLine} ${word}` : word;
+    const testWidth = context.measureText(testLine).width;
+
+    if (testWidth > maxWidth && currentLine) {
+      lines.push(currentLine);
+      currentLine = word;
+    } else {
+      currentLine = testLine;
+    }
+  });
+
+  if (currentLine) {
+    lines.push(currentLine);
+  }
+
+  return lines;
+}
   const text = messageElement.textContent.trim();
 
   if (!text) {
