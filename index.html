@@ -3,29 +3,27 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-
-  <title>Нужные слова — оракул поддержки</title>
+  <title>Нужные слова — машинка добрых слов</title>
 
   <!-- SEO -->
-  <meta name="description" content="Нужные слова — маленький оракул поддержки: тёплые, смешные и странно-точные фразы, когда внутри шумно." />
+  <meta name="description" content="Когда внутри шумно — нажми кнопку. Тёплые и странные слова поддержки прямо для тебя." />
+  <meta name="keywords" content="поддержка, добрые слова, настроение, похвала, нужные слова" />
   <meta name="author" content="Мария Варанд" />
   <link rel="canonical" href="https://mariavarand-ship-it.github.io/nuzhnye-slova/" />
 
   <!-- Карточка при отправке ссылки в мессенджерах и соцсетях -->
-  <meta property="og:title" content="Нужные слова — оракул поддержки" />
-  <meta property="og:description" content="Тёплые, смешные и странно-точные фразы, когда внутри шумно." />
+  <meta property="og:title" content="Нужные слова" />
+  <meta property="og:description" content="Когда внутри шумно — нажми кнопку. Тёплые и странные слова прямо для тебя." />
   <meta property="og:image" content="https://mariavarand-ship-it.github.io/nuzhnye-slova/og-image.png" />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
   <meta property="og:url" content="https://mariavarand-ship-it.github.io/nuzhnye-slova/" />
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="ru_RU" />
   <meta property="og:site_name" content="Нужные слова" />
 
-  <!-- Карточка для X / Twitter -->
+  <!-- Карточка для Telegram и Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Нужные слова — оракул поддержки" />
-  <meta name="twitter:description" content="Тёплые, смешные и странно-точные фразы, когда внутри шумно." />
+  <meta name="twitter:title" content="Нужные слова" />
+  <meta name="twitter:description" content="Когда внутри шумно — нажми кнопку." />
   <meta name="twitter:image" content="https://mariavarand-ship-it.github.io/nuzhnye-slova/og-image.png" />
 
   <link rel="manifest" href="manifest.json" />
@@ -45,8 +43,18 @@
     gtag("js", new Date());
     gtag("config", "G-EJDTVS77VQ");
   </script>
-</head>
 
+  <!-- OneSignal — веб-пуши -->
+  <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+  <script>
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+    OneSignalDeferred.push(async function(OneSignal) {
+      await OneSignal.init({
+        appId: "9b7cd779-c7f9-44ba-b5f7-a1d010c3eb6c",
+      });
+    });
+  </script>
+</head>
 <body>
   <main class="app">
     <section id="nameScreen" class="screen">
@@ -54,45 +62,3 @@
       <h1>Как тебя называла мама в детстве?</h1>
       <p>Это имя будет появляться в советах и похвале.</p>
       <input id="nameInput" placeholder="Например: Машенька" autocomplete="nickname" />
-      <button class="button" id="saveNameButton">Продолжить</button>
-      <p class="footer">
-        <span id="welcomeFooterPhrase">заходи, когда захочешь</span>
-      </p>
-    </section>
-
-    <section id="mainScreen" class="screen hidden">
-      <button class="change-name" id="resetNameButton">сменить имя</button>
-
-      <div id="emoji" class="symbol">✦</div>
-      <div id="todayDate" class="today-date"></div>
-
-      <div id="message" class="message">
-        Нажми кнопку — и приложение скажет что-нибудь нужное.
-      </div>
-
-      <div class="phrase-actions">
-        <button class="save-card-button is-hidden" id="saveImageButton">
-          <span class="save-card-heart">♡</span>
-          <span>Поделиться</span>
-        </button>
-      </div>
-
-      <div class="buttons">
-        <button class="button odd" id="moodButton">Поднять настроение</button>
-        <button class="button even" id="wisdomButton">Совет дня</button>
-        <button class="button odd" id="praiseButton">Похвалить</button>
-      </div>
-
-      <p class="footer">
-        <span id="footerPhrase">заходи, когда захочешь</span>
-        <span class="footer-dot">·</span>
-        <a href="https://t.me/mashavarand" target="_blank" rel="noopener noreferrer" id="authorLink">
-          написать автору
-        </a>
-      </p>
-    </section>
-  </main>
-
-  <script src="script.js"></script>
-</body>
-</html>
