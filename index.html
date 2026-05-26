@@ -3,25 +3,46 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Нужные слова</title>
+
+  <title>Нужные слова — оракул поддержки</title>
+
+  <!-- SEO -->
+  <meta name="description" content="Нужные слова — маленький оракул поддержки: тёплые, смешные и странно-точные фразы, когда внутри шумно." />
+  <meta name="author" content="Мария Варанд" />
+  <link rel="canonical" href="https://mariavarand-ship-it.github.io/nuzhnye-slova/" />
+
+  <!-- Карточка при отправке ссылки в мессенджерах и соцсетях -->
+  <meta property="og:title" content="Нужные слова — оракул поддержки" />
+  <meta property="og:description" content="Тёплые, смешные и странно-точные фразы, когда внутри шумно." />
+  <meta property="og:image" content="https://mariavarand-ship-it.github.io/nuzhnye-slova/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:url" content="https://mariavarand-ship-it.github.io/nuzhnye-slova/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="ru_RU" />
+  <meta property="og:site_name" content="Нужные слова" />
+
+  <!-- Карточка для X / Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Нужные слова — оракул поддержки" />
+  <meta name="twitter:description" content="Тёплые, смешные и странно-точные фразы, когда внутри шумно." />
+  <meta name="twitter:image" content="https://mariavarand-ship-it.github.io/nuzhnye-slova/og-image.png" />
 
   <link rel="manifest" href="manifest.json" />
   <link rel="stylesheet" href="style.css" />
   <link rel="apple-touch-icon" href="apple-touch-icon.png" />
   <link rel="icon" type="image/png" href="apple-touch-icon.png" />
-
   <meta name="theme-color" content="#000000" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Слова" />
 
-  <!-- Google tag (gtag.js) -->
+  <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-EJDTVS77VQ"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag("js", new Date());
-
     gtag("config", "G-EJDTVS77VQ");
   </script>
 </head>
@@ -30,15 +51,10 @@
   <main class="app">
     <section id="nameScreen" class="screen">
       <div class="symbol">✦</div>
-
       <h1>Как тебя называла мама в детстве?</h1>
-
       <p>Это имя будет появляться в советах и похвале.</p>
-
       <input id="nameInput" placeholder="Например: Машенька" autocomplete="nickname" />
-
       <button class="button" id="saveNameButton">Продолжить</button>
-
       <p class="footer">
         <span id="welcomeFooterPhrase">заходи, когда захочешь</span>
       </p>
@@ -48,7 +64,6 @@
       <button class="change-name" id="resetNameButton">сменить имя</button>
 
       <div id="emoji" class="symbol">✦</div>
-
       <div id="todayDate" class="today-date"></div>
 
       <div id="message" class="message">
@@ -58,7 +73,7 @@
       <div class="phrase-actions">
         <button class="save-card-button is-hidden" id="saveImageButton">
           <span class="save-card-heart">♡</span>
-          <span>сохранить</span>
+          <span>Поделиться</span>
         </button>
       </div>
 
