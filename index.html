@@ -7,4 +7,82 @@
 
   <!-- SEO -->
   <meta name="description" content="Когда внутри шумно — нажми кнопку. Тёплые и странные слова поддержки прямо для тебя." />
-  <met
+  <meta name="keywords" content="поддержка, добрые слова, настроение, похвала, нужные слова" />
+  <meta name="author" content="Мария Варанд" />
+  <link rel="canonical" href="https://mariavarand-ship-it.github.io/nuzhnye-slova/" />
+
+  <!-- Карточка при отправке ссылки в мессенджерах и соцсетях -->
+  <meta property="og:title" content="Нужные слова" />
+  <meta property="og:description" content="Когда внутри шумно — нажми кнопку. Тёплые и странные слова прямо для тебя." />
+  <meta property="og:image" content="https://mariavarand-ship-it.github.io/nuzhnye-slova/og-image.png" />
+  <meta property="og:url" content="https://mariavarand-ship-it.github.io/nuzhnye-slova/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="ru_RU" />
+  <meta property="og:site_name" content="Нужные слова" />
+
+  <!-- Карточка для Telegram и Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Нужные слова" />
+  <meta name="twitter:description" content="Когда внутри шумно — нажми кнопку." />
+  <meta name="twitter:image" content="https://mariavarand-ship-it.github.io/nuzhnye-slova/og-image.png" />
+
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <link rel="icon" type="image/png" href="apple-touch-icon.png" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Слова" />
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-EJDTVS77VQ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-EJDTVS77VQ");
+  </script>
+</head>
+<body>
+  <main class="app">
+    <section id="nameScreen" class="screen">
+      <div class="symbol">✦</div>
+      <h1>Как тебя называла мама в детстве?</h1>
+      <p>Это имя будет появляться в советах и похвале.</p>
+      <input id="nameInput" placeholder="Например: Машенька" autocomplete="nickname" />
+      <button class="button" id="saveNameButton">Продолжить</button>
+      <p class="footer">
+        <span id="welcomeFooterPhrase">заходи, когда захочешь</span>
+      </p>
+    </section>
+    <section id="mainScreen" class="screen hidden">
+      <button class="change-name" id="resetNameButton">сменить имя</button>
+      <div id="emoji" class="symbol">✦</div>
+      <div id="todayDate" class="today-date"></div>
+      <div id="message" class="message">
+        Нажми кнопку — и приложение скажет что-нибудь нужное.
+      </div>
+      <div class="phrase-actions">
+        <button class="save-card-button is-hidden" id="saveImageButton">
+          <span class="save-card-heart">♡</span>
+          <span>сохранить</span>
+        </button>
+      </div>
+      <div class="buttons">
+        <button class="button odd" id="moodButton">Поднять настроение</button>
+        <button class="button even" id="wisdomButton">Совет дня</button>
+        <button class="button odd" id="praiseButton">Похвалить</button>
+      </div>
+      <p class="footer">
+        <span id="footerPhrase">заходи, когда захочешь</span>
+        <span class="footer-dot">·</span>
+        <a href="https://t.me/mashavarand" target="_blank" rel="noopener noreferrer" id="authorLink">
+          написать автору
+        </a>
+      </p>
+    </section>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
