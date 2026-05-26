@@ -44,13 +44,13 @@
     gtag("config", "G-EJDTVS77VQ");
   </script>
 
- <!-- OneSignal — веб-пуши -->
+<!-- OneSignal — веб-пуши -->
 <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
 <script>
   window.OneSignalDeferred = window.OneSignalDeferred || [];
 
-  OneSignalDeferred.push(async function(OneSignal) {
-    await OneSignal.init({
+  OneSignalDeferred.push(function(OneSignal) {
+    OneSignal.init({
       appId: "9b7cd779-c7f9-44ba-b5f7-a1d010c3eb6c",
       serviceWorkerPath: "/nuzhnye-slova/OneSignalSDKWorker.js",
       serviceWorkerParam: {
