@@ -56,15 +56,6 @@ const footerPhrases = [
   "можно заглянуть просто так"
 ];
 
-const nameOpeners = [
-  "{name},",
-  "{name}, слушай,",
-  "{name}, смотри,",
-  "{name}, тихонько,",
-  "{name}, маленькая весточка,",
-  "{name}, по секрету,"
-];
-
 function startApp() {
   if (saveImageButton) {
     saveImageButton.textContent = "Поделиться";
@@ -210,22 +201,12 @@ function formatName(name) {
   return name.charAt(0).toLocaleUpperCase("ru-RU") + name.slice(1);
 }
 
-function getName() {
-  return formatName(localStorage.getItem(nameKey) || "солнышко");
+function getSavedName() {
+  return localStorage.getItem(nameKey) || "";
 }
 
 function getRandomItem(items) {
   return items[Math.floor(Math.random() * items.length)];
-}
-
-function getNameOpener() {
-  const opener = getRandomItem(nameOpeners);
-  return opener.replace("{name}", getName());
-}
-
-function lowerFirstLetter(text) {
-  if (!text) return text;
-  return text.charAt(0).toLocaleLowerCase("ru-RU") + text.slice(1);
 }
 
 function hideSaveButton() {
@@ -256,7 +237,7 @@ function startLoadingAnimation() {
     "✦ ·",
     "✦ · ·",
     "облако ищет слово ·",
-    "булочка думает · ·",
+    "тёплое уже в пути · ·",
     "самовар собирает смысл · · ·",
     "маленькая лампа шуршит ·"
   ];
@@ -287,7 +268,7 @@ async function generateAIMessage(type) {
     headers: {
       "Content-Type": "application/json"
     },
-    body: JSON.stringify({ type })
+    body: JSON.stringify({ type, name: getSavedName() })
   });
 
   const data = await response.json();
@@ -320,7 +301,7 @@ async function showAIMessage(type, eventName, emojiList) {
     }
 
     if (messageElement) {
-      messageElement.textContent = `${getNameOpener()} ${lowerFirstLetter(message)}`;
+      messageElement.textContent = message;
     }
 
     showSaveButton();
@@ -333,8 +314,9 @@ async function showAIMessage(type, eventName, emojiList) {
     }
 
     if (messageElement) {
+      const who = formatName(getSavedName() || "Солнышко");
       messageElement.textContent =
-        `${getNameOpener()} что-то зашуршало не там. Попробуй ещё раз — облако чинит проводок.`;
+        `${who}, что-то зашуршало не там. Попробуй ещё раз — облако чинит проводок.`;
     }
 
     showSaveButton();
