@@ -23,6 +23,9 @@ const moodButton = document.getElementById("moodButton");
 const wisdomButton = document.getElementById("wisdomButton");
 const praiseButton = document.getElementById("praiseButton");
 
+// --- OneSignal: кнопка уведомлений ---
+const notifyButton = document.getElementById("notifyButton");
+
 const nameKey = "childhoodName";
 let loadingAnimationTimer = null;
 
@@ -98,6 +101,7 @@ function showMainScreen(name) {
   messageElement.textContent = `${formatName(name)}, нажми кнопку — и приложение скажет что-нибудь нужное.`;
 
   hideSaveButton();
+  hideNotifyButton();
 }
 
 function saveName() {
@@ -131,6 +135,7 @@ function resetName() {
   }
 
   hideSaveButton();
+  hideNotifyButton();
   showNameScreen();
 }
 
@@ -221,6 +226,35 @@ function showSaveButton() {
   }
 }
 
+// --- OneSignal: показать/спрятать кнопку уведомлений ---
+function hideNotifyButton() {
+  if (notifyButton) {
+    notifyButton.classList.add("is-hidden");
+  }
+}
+
+// Показываем кнопку только если человек ещё не разрешил уведомления.
+// Если уже разрешил — кнопка не нужна, прячем её.
+function maybeShowNotifyButton() {
+  if (!notifyButton) return;
+
+  window.OneSignalDeferred = window.OneSignalDeferred || [];
+  window.OneSignalDeferred.push(function (OneSignal) {
+    try {
+      const alreadyAllowed = OneSignal.Notifications.permission === true;
+      if (alreadyAllowed) {
+        notifyButton.classList.add("is-hidden");
+      } else {
+        notifyButton.classList.remove("is-hidden");
+      }
+    } catch (error) {
+      // Если что-то пошло не так — всё равно покажем кнопку,
+      // хуже не будет.
+      notifyButton.classList.remove("is-hidden");
+    }
+  });
+}
+
 function setButtonsDisabled(isDisabled) {
   [moodButton, wisdomButton, praiseButton].forEach((button) => {
     if (button) {
@@ -305,6 +339,8 @@ async function showAIMessage(type, eventName, emojiList) {
     }
 
     showSaveButton();
+    // --- OneSignal: момент тёплого сообщения — предлагаем уведомления ---
+    maybeShowNotifyButton();
   } catch (error) {
     console.error(error);
     stopLoadingAnimation();
@@ -570,6 +606,29 @@ if (praiseButton) {
 
 if (saveImageButton) {
   saveImageButton.addEventListener("click", shareCurrentPhrase);
+}
+
+// --- OneSignal: нажатие на кнопку уведомлений ---
+if (notifyButton) {
+  notifyButton.addEventListener("click", function () {
+    trackEvent("notify_clicked");
+
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+    window.OneSignalDeferred.push(async function (OneSignal) {
+      try {
+        // Просим разрешение. На iPhone здесь появится системное окно
+        // (приложение должно быть запущено с иконки на домашнем экране).
+        await OneSignal.Notifications.requestPermission();
+
+        if (OneSignal.Notifications.permission === true) {
+          notifyButton.classList.add("is-hidden");
+          trackEvent("notify_granted");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    });
+  });
 }
 
 if (authorLink) {
