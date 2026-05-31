@@ -43,6 +43,27 @@
     gtag("js", new Date());
     gtag("config", "G-EJDTVS77VQ");
   </script>
+
+  <!-- ===== OneSignal (push-уведомления) ===== -->
+  <!-- Загружаем SDK OneSignal версии v16 -->
+  <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+  <script>
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+    OneSignalDeferred.push(async function (OneSignal) {
+      await OneSignal.init({
+        appId: "9b7cd779-c7f9-44ba-b5f7-a1d010c3eb6c",
+        // Сайт лежит в подпапке /nuzhnye-slova/, поэтому явно указываем,
+        // где находятся файлы-воркеры и какую область они контролируют:
+        serviceWorkerPath: "nuzhnye-slova/OneSignalSDKWorker.js",
+        serviceWorkerParam: { scope: "/nuzhnye-slova/" },
+        // Свой запрос разрешения показываем своей кнопкой в приложении,
+        // поэтому автоматические подсказки OneSignal отключаем:
+        autoResubscribe: true,
+        promptOptions: { slidedown: { prompts: [] } }
+      });
+    });
+  </script>
+  <!-- ===== /OneSignal ===== -->
 </head>
 <body>
   <main class="app">
@@ -69,6 +90,16 @@
           <span>сохранить</span>
         </button>
       </div>
+
+      <!-- ===== Кнопка включения уведомлений ===== -->
+      <!-- Появляется после первого тёплого сообщения, прячется после подписки -->
+      <div class="notify-wrap">
+        <button class="button notify-button is-hidden" id="notifyButton">
+          🔔 Получать тёплые слова каждое утро
+        </button>
+      </div>
+      <!-- ===== /Кнопка уведомлений ===== -->
+
       <div class="buttons">
         <button class="button odd" id="moodButton">Поднять настроение</button>
         <button class="button even" id="wisdomButton">Совет дня</button>
