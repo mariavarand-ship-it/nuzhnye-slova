@@ -5,10 +5,10 @@ function trackEvent(eventName) {
 }
 
 const API_URL = "https://nuzhnye-slova-api.vercel.app/api/generate";
+const APP_URL = "https://mariavarand-ship-it.github.io/nuzhnye-slova/";
 
 const nameScreen = document.getElementById("nameScreen");
 const mainScreen = document.getElementById("mainScreen");
-const nameInput = document.getElementById("nameInput");
 const messageElement = document.getElementById("message");
 const emojiElement = document.getElementById("emoji");
 const saveImageButton = document.getElementById("saveImageButton");
@@ -17,16 +17,24 @@ const todayDateElement = document.getElementById("todayDate");
 const footerPhraseElement = document.getElementById("footerPhrase");
 const welcomeFooterPhraseElement = document.getElementById("welcomeFooterPhrase");
 
-const saveNameButton = document.getElementById("saveNameButton");
+const startButton = document.getElementById("startButton");
 const resetNameButton = document.getElementById("resetNameButton");
 const moodButton = document.getElementById("moodButton");
 const wisdomButton = document.getElementById("wisdomButton");
 const praiseButton = document.getElementById("praiseButton");
 
-// --- OneSignal: кнопка уведомлений ---
+// Мягкое предложение имени
+const namePrompt = document.getElementById("namePrompt");
+const inlineNameInput = document.getElementById("inlineNameInput");
+const inlineNameSave = document.getElementById("inlineNameSave");
+const nameLaterButton = document.getElementById("nameLaterButton");
+
+// OneSignal: кнопка уведомлений
 const notifyButton = document.getElementById("notifyButton");
 
 const nameKey = "childhoodName";
+const onboardedKey = "onboarded";          // человек уже заходил в приложение
+const namePromptSeenKey = "namePromptSeen"; // предложение имени уже показывали
 let loadingAnimationTimer = null;
 
 const backgroundClasses = [
@@ -69,27 +77,24 @@ function startApp() {
   updateTodayDate();
   updateDailyFooterPhrase();
 
-  const savedName = localStorage.getItem(nameKey);
+  const onboarded = localStorage.getItem(onboardedKey) === "1";
 
-  if (savedName) {
-    showMainScreen(savedName);
+  // Новый человек видит стартовый экран. Кто уже заходил — сразу главный.
+  if (onboarded) {
+    showMainScreen();
   } else {
-    showNameScreen();
+    showWelcomeScreen();
   }
 }
 
-function showNameScreen() {
+function showWelcomeScreen() {
   if (!nameScreen || !mainScreen) return;
 
   nameScreen.classList.remove("hidden");
   mainScreen.classList.add("hidden");
-
-  setTimeout(() => {
-    if (nameInput) nameInput.focus();
-  }, 100);
 }
 
-function showMainScreen(name) {
+function showMainScreen() {
   if (!nameScreen || !mainScreen || !messageElement || !emojiElement) return;
 
   applyDailyBackground();
@@ -98,45 +103,29 @@ function showMainScreen(name) {
   mainScreen.classList.remove("hidden");
 
   emojiElement.textContent = "✦";
-  messageElement.textContent = `${formatName(name)}, нажми кнопку — и приложение скажет что-нибудь нужное.`;
 
+  const name = getSavedName();
+  if (name) {
+    messageElement.textContent =
+      `${formatName(name)}, нажми кнопку — и приложение скажет что-нибудь нужное.`;
+  } else {
+    messageElement.textContent =
+      "Нажми кнопку — и приложение скажет что-нибудь тёплое и нужное. Прямо для тебя.";
+  }
+
+  updateCornerLabel();
   hideSaveButton();
   hideNotifyButton();
+  hideNamePrompt();
 }
 
-function saveName() {
-  if (!nameInput) return;
-
-  const name = nameInput.value.trim();
-
-  if (!name) {
-    nameInput.focus();
-    return;
-  }
-
-  localStorage.setItem(nameKey, name);
-  trackEvent("name_saved");
-  showMainScreen(name);
-}
-
-function resetName() {
-  localStorage.removeItem(nameKey);
-
-  if (nameInput) {
-    nameInput.value = "";
-  }
-
-  if (emojiElement) {
-    emojiElement.textContent = "✦";
-  }
-
-  if (messageElement) {
-    messageElement.textContent = "Нажми кнопку — и приложение скажет что-нибудь нужное.";
-  }
-
-  hideSaveButton();
-  hideNotifyButton();
-  showNameScreen();
+// Кнопка «Получить тёплые слова» на стартовом экране:
+// заходим в приложение и сразу даём первое тёплое слово.
+function enterApp() {
+  localStorage.setItem(onboardedKey, "1");
+  trackEvent("app_started");
+  showMainScreen();
+  showMood();
 }
 
 function getDayNumber() {
@@ -226,17 +215,88 @@ function showSaveButton() {
   }
 }
 
-// --- OneSignal: показать/спрятать кнопку уведомлений ---
+// ===== Предложение имени =====
+function updateCornerLabel() {
+  if (!resetNameButton) return;
+  resetNameButton.textContent = getSavedName() ? "сменить имя" : "добавить имя";
+}
+
+function hideNamePrompt() {
+  if (namePrompt) {
+    namePrompt.classList.add("is-hidden");
+  }
+}
+
+// Открыть предложение имени вручную (по кнопке в углу)
+function openNamePrompt() {
+  if (!namePrompt) return;
+  if (inlineNameInput) {
+    inlineNameInput.value = getSavedName();
+  }
+  namePrompt.classList.remove("is-hidden");
+  setTimeout(() => {
+    if (inlineNameInput) inlineNameInput.focus();
+  }, 50);
+}
+
+// Показать предложение само — только если имени нет и его ещё не показывали
+function maybeShowNamePrompt() {
+  if (!namePrompt) return;
+
+  const hasName = !!getSavedName();
+  const seen = localStorage.getItem(namePromptSeenKey) === "1";
+
+  if (!hasName && !seen) {
+    namePrompt.classList.remove("is-hidden");
+  }
+}
+
+function saveInlineName() {
+  if (!inlineNameInput) return;
+
+  const name = inlineNameInput.value.trim();
+
+  if (!name) {
+    inlineNameInput.focus();
+    return;
+  }
+
+  localStorage.setItem(nameKey, name);
+  localStorage.setItem(namePromptSeenKey, "1");
+  trackEvent("name_saved");
+
+  hideNamePrompt();
+  updateCornerLabel();
+
+  // Тёплое подтверждение
+  if (emojiElement) emojiElement.textContent = "♡";
+  if (messageElement) {
+    messageElement.textContent =
+      `Готово, ${formatName(name)} 🤍 Теперь буду обращаться по имени.`;
+  }
+}
+
+function dismissNamePrompt() {
+  localStorage.setItem(namePromptSeenKey, "1");
+  trackEvent("name_skipped");
+  hideNamePrompt();
+}
+
+// ===== OneSignal: кнопка уведомлений =====
 function hideNotifyButton() {
   if (notifyButton) {
     notifyButton.classList.add("is-hidden");
   }
 }
 
-// Показываем кнопку только если человек ещё не разрешил уведомления.
-// Если уже разрешил — кнопка не нужна, прячем её.
 function maybeShowNotifyButton() {
   if (!notifyButton) return;
+
+  // Пока на экране висит предложение имени — уведомления не предлагаем,
+  // чтобы не сваливать на человека две просьбы сразу.
+  if (namePrompt && !namePrompt.classList.contains("is-hidden")) {
+    return;
+  }
 
   window.OneSignalDeferred = window.OneSignalDeferred || [];
   window.OneSignalDeferred.push(function (OneSignal) {
@@ -248,8 +308,6 @@ function maybeShowNotifyButton() {
         notifyButton.classList.remove("is-hidden");
       }
     } catch (error) {
-      // Если что-то пошло не так — всё равно покажем кнопку,
-      // хуже не будет.
       notifyButton.classList.remove("is-hidden");
     }
   });
@@ -339,7 +397,9 @@ async function showAIMessage(type, eventName, emojiList) {
     }
 
     showSaveButton();
-    // --- OneSignal: момент тёплого сообщения — предлагаем уведомления ---
+    // Сначала (после первого слова) — мягко предлагаем имя,
+    // потом — уведомления (но не одновременно).
+    maybeShowNamePrompt();
     maybeShowNotifyButton();
   } catch (error) {
     console.error(error);
@@ -438,9 +498,15 @@ async function shareCurrentPhrase() {
     context.fillText(line, size / 2, startY + index * lineHeight);
   });
 
+  // Подпись приложения
   context.fillStyle = "rgba(255, 255, 255, 0.46)";
   context.font = "30px -apple-system, BlinkMacSystemFont, sans-serif";
-  context.fillText("нужные слова", size / 2, size - 110);
+  context.fillText("нужные слова", size / 2, size - 116);
+
+  // Деликатная ссылка, чтобы тот, кому отправили, мог найти приложение
+  context.fillStyle = "rgba(255, 255, 255, 0.3)";
+  context.font = "24px -apple-system, BlinkMacSystemFont, sans-serif";
+  context.fillText("mariavarand-ship-it.github.io/nuzhnye-slova", size / 2, size - 72);
 
   const blob = await new Promise((resolve) => {
     canvas.toBlob(resolve, "image/png");
@@ -452,14 +518,18 @@ async function shareCurrentPhrase() {
     type: "image/png"
   });
 
+  const shareText =
+    `Держи тёплые слова 🤍\nЕсли захочешь себе такие же — нажми:\n${APP_URL}`;
+
   if (navigator.canShare && navigator.canShare({ files: [file] })) {
     try {
       await navigator.share({
         files: [file],
         title: "Нужные слова",
-        text: "Сохранила нужные слова"
+        text: shareText
       });
 
+      trackEvent("shared_success");
       return;
     } catch (error) {
       // Пользователь мог закрыть меню «Поделиться».
@@ -584,12 +654,29 @@ function wrapText(context, text, maxWidth) {
   return lines;
 }
 
-if (saveNameButton) {
-  saveNameButton.addEventListener("click", saveName);
+// ===== Слушатели =====
+if (startButton) {
+  startButton.addEventListener("click", enterApp);
 }
 
 if (resetNameButton) {
-  resetNameButton.addEventListener("click", resetName);
+  resetNameButton.addEventListener("click", openNamePrompt);
+}
+
+if (inlineNameSave) {
+  inlineNameSave.addEventListener("click", saveInlineName);
+}
+
+if (nameLaterButton) {
+  nameLaterButton.addEventListener("click", dismissNamePrompt);
+}
+
+if (inlineNameInput) {
+  inlineNameInput.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      saveInlineName();
+    }
+  });
 }
 
 if (moodButton) {
@@ -608,7 +695,7 @@ if (saveImageButton) {
   saveImageButton.addEventListener("click", shareCurrentPhrase);
 }
 
-// --- OneSignal: нажатие на кнопку уведомлений ---
+// OneSignal: нажатие на кнопку уведомлений
 if (notifyButton) {
   notifyButton.addEventListener("click", function () {
     trackEvent("notify_clicked");
@@ -616,8 +703,6 @@ if (notifyButton) {
     window.OneSignalDeferred = window.OneSignalDeferred || [];
     window.OneSignalDeferred.push(async function (OneSignal) {
       try {
-        // Просим разрешение. На iPhone здесь появится системное окно
-        // (приложение должно быть запущено с иконки на домашнем экране).
         await OneSignal.Notifications.requestPermission();
 
         if (OneSignal.Notifications.permission === true) {
@@ -634,14 +719,6 @@ if (notifyButton) {
 if (authorLink) {
   authorLink.addEventListener("click", () => {
     trackEvent("author_contact_clicked");
-  });
-}
-
-if (nameInput) {
-  nameInput.addEventListener("keydown", (event) => {
-    if (event.key === "Enter") {
-      saveName();
-    }
   });
 }
 
