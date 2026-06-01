@@ -45,40 +45,92 @@
   </script>
 
   <!-- ===== OneSignal (push-уведомления) ===== -->
-  <!-- Загружаем SDK OneSignal версии v16 -->
   <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
   <script>
     window.OneSignalDeferred = window.OneSignalDeferred || [];
     OneSignalDeferred.push(async function (OneSignal) {
       await OneSignal.init({
         appId: "9b7cd779-c7f9-44ba-b5f7-a1d010c3eb6c",
-        // Сайт лежит в подпапке /nuzhnye-slova/, поэтому явно указываем,
-        // где находятся файлы-воркеры и какую область они контролируют:
         serviceWorkerPath: "nuzhnye-slova/OneSignalSDKWorker.js",
         serviceWorkerParam: { scope: "/nuzhnye-slova/" },
-        // Свой запрос разрешения показываем своей кнопкой в приложении,
-        // поэтому автоматические подсказки OneSignal отключаем:
         autoResubscribe: true,
         promptOptions: { slidedown: { prompts: [] } }
       });
     });
   </script>
   <!-- ===== /OneSignal ===== -->
+
+  <!-- ===== Стили для предложения имени ===== -->
+  <style>
+    .notify-wrap { margin: 10px 0; }
+    .name-prompt {
+      margin: 18px auto 6px;
+      max-width: 340px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, .12);
+    }
+    .name-prompt-text {
+      font-size: 14px;
+      line-height: 1.45;
+      color: rgba(255, 255, 255, .8);
+      margin: 0 0 12px;
+    }
+    .name-prompt-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .name-prompt-row input {
+      flex: 1;
+      padding: 11px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, .2);
+      background: rgba(255, 255, 255, .06);
+      color: #fff;
+      font: inherit;
+      font-size: 14px;
+      outline: none;
+    }
+    .name-prompt-row input::placeholder { color: rgba(255, 255, 255, .45); }
+    .name-prompt-save {
+      flex: 0 0 auto;
+      width: 46px;
+      height: 44px;
+      border-radius: 999px;
+      background: #f1efe8;
+      color: #111;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+    }
+    .name-prompt-later {
+      margin-top: 10px;
+      background: none;
+      border: none;
+      color: rgba(255, 255, 255, .5);
+      text-decoration: underline;
+      font: inherit;
+      cursor: pointer;
+    }
+  </style>
+  <!-- ===== /Стили ===== -->
 </head>
 <body>
   <main class="app">
+
+    <!-- ===== Стартовый экран: символ + крючок + одна кнопка ===== -->
     <section id="nameScreen" class="screen">
       <div class="symbol">✦</div>
-      <h1>Как тебя называла мама в детстве?</h1>
-      <p>Это имя будет появляться в советах и похвале.</p>
-      <input id="nameInput" placeholder="Например: Машенька" autocomplete="nickname" />
-      <button class="button" id="saveNameButton">Продолжить</button>
+      <h1>Когда внутри шумно — нажми.</h1>
+      <button class="button" id="startButton">Получить тёплые слова</button>
       <p class="footer">
         <span id="welcomeFooterPhrase">заходи, когда захочешь</span>
       </p>
     </section>
+
+    <!-- ===== Главный экран ===== -->
     <section id="mainScreen" class="screen hidden">
-      <button class="change-name" id="resetNameButton">сменить имя</button>
+      <button class="change-name" id="resetNameButton">добавить имя</button>
       <div id="emoji" class="symbol">✦</div>
       <div id="todayDate" class="today-date"></div>
       <div id="message" class="message">
@@ -91,14 +143,22 @@
         </button>
       </div>
 
-      <!-- ===== Кнопка включения уведомлений ===== -->
-      <!-- Появляется после первого тёплого сообщения, прячется после подписки -->
+      <!-- Мягкое предложение имени: появляется после первого тёплого слова, один раз -->
+      <div id="namePrompt" class="name-prompt is-hidden">
+        <p class="name-prompt-text">Хочешь, буду обращаться по имени? Так теплее 🤍</p>
+        <div class="name-prompt-row">
+          <input id="inlineNameInput" placeholder="Как тебя называла мама?" autocomplete="nickname" />
+          <button class="name-prompt-save" id="inlineNameSave" aria-label="сохранить имя">→</button>
+        </div>
+        <button class="name-prompt-later" id="nameLaterButton">не сейчас</button>
+      </div>
+
+      <!-- Кнопка включения уведомлений -->
       <div class="notify-wrap">
         <button class="button notify-button is-hidden" id="notifyButton">
           🔔 Получать тёплые слова каждое утро
         </button>
       </div>
-      <!-- ===== /Кнопка уведомлений ===== -->
 
       <div class="buttons">
         <button class="button odd" id="moodButton">Поднять настроение</button>
